@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
+import com.oreki5.keionbu.dtoModels.students.StudentsCreateReq;
+import com.oreki5.keionbu.dtoModels.teachers.TeachersCreateReq;
 import com.oreki5.keionbu.services.UserAccountService;
 
 @RestController
@@ -30,14 +31,18 @@ public class UserAccountController {
      */
 
     @PostMapping("/teachers")
-    public ResponseEntity<UserAccountResponse> createTeacher(@RequestBody UserAccountRequest request) {
+    public ResponseEntity<?> createTeacher(@RequestBody TeachersCreateReq request) {
+        try {
+            return new ResponseEntity<>(userAccountService.createUser(request, "TEACHER"), HttpStatus.CREATED);
 
-        return new ResponseEntity<>(userAccountService.createUser(request), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/teachers/{id}")
-    public ResponseEntity<UserAccountResponse> updateTeacher(@PathVariable String id,
-            @RequestBody UserAccountRequest request) {
+    public ResponseEntity<?> updateTeacher(@PathVariable String id,
+            @RequestBody TeachersCreateReq request) {
         return new ResponseEntity<>(userAccountService.updateUser(id, request), HttpStatus.CREATED);
 
     }
@@ -52,14 +57,18 @@ public class UserAccountController {
      */
 
     @PostMapping("/students")
-    public ResponseEntity<UserAccountResponse> createStudent(@RequestBody UserAccountRequest request) {
-        return new ResponseEntity<>(userAccountService.createUser(request), HttpStatus.CREATED);
+    public ResponseEntity<?> createStudent(@RequestBody StudentsCreateReq request) {
+        try {
+            return new ResponseEntity<>(userAccountService.createUser(request, "STUDENT"), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
 
     }
 
     @PutMapping("/students/{id}")
     public ResponseEntity<UserAccountResponse> updateStudent(@PathVariable String id,
-            @RequestBody UserAccountRequest request) {
+            @RequestBody StudentsCreateReq request) {
         return new ResponseEntity<>(userAccountService.updateUser(id, request), HttpStatus.CREATED);
 
     }
