@@ -2,14 +2,9 @@ package com.oreki5.keionbu.services;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.oreki5.keionbu.dtoInterfaces.AssignmentsRequest;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.TeachersResponse;
 
@@ -36,7 +31,7 @@ public class StudentsService {
         return null;
     }
 
-    public AssignmentsResponse submitAssignment(String assignmentId, AssignmentsRequest request) {
+    public AssignmentsResponse submitAssignment(String assignmentId, MultipartFile submissionFile) {
         return null;
     }
 }
