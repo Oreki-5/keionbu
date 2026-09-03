@@ -2,6 +2,7 @@ package com.oreki5.keionbu.dbEntities;
 
 import java.util.List;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
@@ -16,6 +17,8 @@ public class Teachers extends Users{
     private String lastName;
 
     private String subject;
+    
+    @DBRef
     private List<Students> students;
 
     

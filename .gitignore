@@ -3,11 +3,9 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-!**/properties/
 application.properties
-keionbu.properties
-main.properties
-src\main\resources\properties\main.properties
+
+
 ### STS ###
 .apt_generated
 .classpath

@@ -12,4 +12,6 @@ public interface TeachersRepo extends MongoRepository<Teachers,String>{
 
     boolean existsByUsername(String username);
 
+    // List<Students> findByTeachersContainingTeachers(Teachers teacher);
+
 }
