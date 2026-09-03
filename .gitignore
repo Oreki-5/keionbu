@@ -3,9 +3,8 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.properties
-!**/src/main/resources/keionbu.properties
-
+!**/properties/
+keionbu.properties
 ### STS ###
 .apt_generated
 .classpath
@@ -14,6 +13,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.properties
 
 ### IntelliJ IDEA ###
 .idea
