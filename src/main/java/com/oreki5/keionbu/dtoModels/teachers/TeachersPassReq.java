@@ -8,30 +8,19 @@ import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 
 import jakarta.activation.UnsupportedDataTypeException;
 import jakarta.validation.constraints.NotEmpty;
+
 import lombok.Data;
 
 @Data
-public class TeachersCreateReq implements UserAccountRequest {
-    @NotEmpty
-    private String username;
+public class TeachersPassReq implements UserAccountRequest {
+
     @NotEmpty
     private String password;
 
-    @NotEmpty
-    private String firstName;
-    @NotEmpty
-    private String lastName;
-    @NotEmpty
-    private String subject;
-
     @Override
-    public Teachers mapToTeachers(Teachers teacher){
-        teacher.setUsername(username);
+    public Teachers mapToTeachers(Teachers teacher) {
         teacher.setPassword(password);
-        teacher.setFirstName(firstName);
-        teacher.setLastName(lastName);
         teacher.setUpdatedAt(Instant.now());
-        teacher.setSubject(subject);
         return teacher;
     }
 
@@ -39,5 +28,4 @@ public class TeachersCreateReq implements UserAccountRequest {
     public Students mapToStudents(Students student) throws UnsupportedDataTypeException {
         throw new UnsupportedOperationException("Invalid Data given");
     }
-
 }

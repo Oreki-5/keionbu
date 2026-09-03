@@ -11,11 +11,10 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class StudentsCreateReq implements UserAccountRequest {
+public class StudentsUpdateReq implements UserAccountRequest {
     @NotEmpty
     private String username;
-    @NotEmpty
-    private String password;
+
     @NotEmpty
     private String firstName;
     @NotEmpty
@@ -29,11 +28,9 @@ public class StudentsCreateReq implements UserAccountRequest {
     @Override
     public Students mapToStudents(Students student) throws UnsupportedDataTypeException {
         student.setUsername(username);
-        student.setPassword(password);
         student.setFirstName(firstName);
         student.setLastName(lastName);
         student.setUpdatedAt(Instant.now());
         return student;
     }
-
 }

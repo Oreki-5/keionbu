@@ -1,4 +1,4 @@
-package com.oreki5.keionbu.dtoModels.students;
+package com.oreki5.keionbu.dtoModels.teachers;
 
 import java.time.Instant;
 
@@ -11,29 +11,30 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class StudentsCreateReq implements UserAccountRequest {
+public class TeachersUpdateReq implements UserAccountRequest {
+
     @NotEmpty
     private String username;
-    @NotEmpty
-    private String password;
+
     @NotEmpty
     private String firstName;
     @NotEmpty
     private String lastName;
+    @NotEmpty
+    private String subject;
 
     @Override
-    public Teachers mapToTeachers(Teachers teacher) throws UnsupportedDataTypeException {
-        throw new UnsupportedOperationException("Invalid data given");
+    public Teachers mapToTeachers(Teachers teacher) {
+        teacher.setUsername(username);
+        teacher.setFirstName(firstName);
+        teacher.setLastName(lastName);
+        teacher.setUpdatedAt(Instant.now());
+        teacher.setSubject(subject);
+        return teacher;
     }
 
     @Override
     public Students mapToStudents(Students student) throws UnsupportedDataTypeException {
-        student.setUsername(username);
-        student.setPassword(password);
-        student.setFirstName(firstName);
-        student.setLastName(lastName);
-        student.setUpdatedAt(Instant.now());
-        return student;
+        throw new UnsupportedOperationException("Invalid Data given");
     }
-
 }
