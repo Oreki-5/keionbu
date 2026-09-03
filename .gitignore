@@ -5,6 +5,8 @@ target/
 !**/src/test/**/target/
 !**/properties/
 keionbu.properties
+main.properties
+src\main\resources\properties\main.properties
 ### STS ###
 .apt_generated
 .classpath
