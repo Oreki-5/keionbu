@@ -8,16 +8,23 @@ import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.LessonsRequest;
 
 import jakarta.activation.UnsupportedDataTypeException;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class LessonsCreateReq implements LessonsRequest {
 
+    @NotNull
     private long lessonNo;
+    @NotEmpty
     private String lessonName;
+    @NotEmpty
     private String lessonDesc;
     private List<String> objectives = new ArrayList<>();
+    @NotEmpty
     private String lessonDifficulty;
+
     private long requiredScore;
 
     @Override

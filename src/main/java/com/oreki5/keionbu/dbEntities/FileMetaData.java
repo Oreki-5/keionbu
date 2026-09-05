@@ -6,12 +6,10 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 public record FileMetaData(String originalName,
-    String storedName,
-    String ownerId,
-    String mimeType,
-    long size,
-    Instant createdAt,
-    @Id ObjectId id
-) {
+        String ownerId,
+        String mimeType,
+        long size,
+        Instant createdAt,
+        @Id ObjectId id) {
 
 }

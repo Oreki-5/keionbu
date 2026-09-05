@@ -18,7 +18,7 @@ public class Teachers extends Users{
 
     private String subject;
     
-    @DBRef
+    @DBRef(lazy=true)
     private List<Students> students;
 
     

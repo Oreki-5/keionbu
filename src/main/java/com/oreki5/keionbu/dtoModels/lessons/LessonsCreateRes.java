@@ -17,7 +17,12 @@ public class LessonsCreateRes implements LessonsResponse {
     private String lessonDifficulty;
     private long requiredScore;
 
-    public LessonsCreateRes(Lessons lesson){
-
+    public LessonsCreateRes(Lessons lesson) {
+        lessonNo = lesson.getLessonNo();
+        lessonName = lesson.getLessonName();
+        lessonDesc = lesson.getLessonDesc();
+        objectives = lesson.getObjectives();
+        lessonDifficulty = lesson.getLessonDifficulty();
+        requiredScore = lesson.getRequiredScore();
     }
 }

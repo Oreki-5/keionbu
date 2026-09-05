@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +22,11 @@ import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.LessonsRequest;
 import com.oreki5.keionbu.dtoInterfaces.LessonsResponse;
 import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
+import com.oreki5.keionbu.dtoModels.lessons.LessonsCreateReq;
 import com.oreki5.keionbu.services.FileManagementService;
 import com.oreki5.keionbu.services.TeachersService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1")
@@ -46,11 +50,17 @@ public class TeacherController {
      * Music lessons related endpoints
      */
 
-    @PostMapping("/lessons")
-    public ResponseEntity<LessonsResponse> createLesson(@RequestBody LessonsRequest request,
-            @RequestParam MultipartFile lessonFile) {
+    @PostMapping("/lessons/{teacherId}")
+    public ResponseEntity<?> createLesson(@PathVariable String teacherId,
+            @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
+            @RequestPart(value = "request") @Valid LessonsCreateReq request) {
+        try {
+            return new ResponseEntity<>(teachersService.createLesson(request, teacherId, lessonFile), HttpStatus.OK);
 
-        return new ResponseEntity<>(teachersService.createLesson(request), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.OK);
+
+        }
 
     }
 
@@ -61,10 +71,16 @@ public class TeacherController {
     }
 
     @PutMapping("/lessons/{id}")
-    public ResponseEntity<LessonsResponse> updateLesson(@RequestBody LessonsRequest request,
-            @RequestParam(required = false) MultipartFile lessonFile) {
+    public ResponseEntity<?> updateLesson(@PathVariable String id,
+            @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
+            @RequestPart(value = "request") @Valid LessonsCreateReq request) {
+        try {
+            return new ResponseEntity<>(teachersService.updateLessonData(request, id), HttpStatus.OK);
 
-        return new ResponseEntity<>(teachersService.updateLessonData(request), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.OK);
+
+        }
 
     }
 
@@ -79,8 +95,14 @@ public class TeacherController {
      */
 
     @PostMapping("/assignments")
-    public ResponseEntity<AssignmentsResponse> createAssignment(@RequestBody AssignmentsRequest request) {
-        return new ResponseEntity<>(teachersService.createAssignment(request), HttpStatus.OK);
+    public ResponseEntity<?> createAssignment(@RequestBody AssignmentsRequest request) {
+        try {
+            return new ResponseEntity<>(teachersService.createAssignment(request), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+
+        }
 
     }
 
@@ -92,14 +114,24 @@ public class TeacherController {
     }
 
     @PutMapping("/assignments/edit/{id}")
-    public ResponseEntity<AssignmentsResponse> editAssignment(@RequestBody AssignmentsRequest request) {
-        return new ResponseEntity<>(teachersService.editAssignment(request), HttpStatus.OK);
+    public ResponseEntity<?> editAssignment(@PathVariable String id,
+            @RequestBody AssignmentsRequest request) {
+        try {
+            return new ResponseEntity<>(teachersService.editAssignment(request, id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
 
     }
 
     @PutMapping("/assignments/approve/{id}")
-    public ResponseEntity<AssignmentsResponse> approveAssignment(@RequestBody AssignmentsRequest request) {
-        return new ResponseEntity<>(teachersService.approveAssignment(request), HttpStatus.OK);
+    public ResponseEntity<?> approveAssignment(@PathVariable String id,
+            @RequestBody AssignmentsRequest request) {
+        try {
+            return new ResponseEntity<>(teachersService.editAssignment(request, id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/assignments/{id}")

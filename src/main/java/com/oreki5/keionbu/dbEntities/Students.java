@@ -15,6 +15,6 @@ import lombok.EqualsAndHashCode;
 public class Students extends Users {
     private String firstName;
     private String lastName;
-    @DBRef
+    @DBRef(lazy=true)
     private List<Teachers> teachersList = new ArrayList<>();
 }
