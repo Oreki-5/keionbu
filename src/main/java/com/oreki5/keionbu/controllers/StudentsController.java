@@ -1,7 +1,5 @@
 package com.oreki5.keionbu.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
-import com.oreki5.keionbu.dtoInterfaces.TeachersResponse;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinReq;
 import com.oreki5.keionbu.services.FileManagementService;
 import com.oreki5.keionbu.services.StudentsService;
@@ -60,16 +56,21 @@ public class StudentsController {
      */
 
     @GetMapping("/assignments/{studentId}")
-    public ResponseEntity<List<AssignmentsResponse>> getAssignmentsOfStudent(@PathVariable String studentId,
-            @RequestParam String teacherId) {
+    public ResponseEntity<?> getAssignmentsOfStudent(@PathVariable String studentId,
+            @RequestParam(required=false) String teacherId) {
         return new ResponseEntity<>(studentsService.getAssignmentsOfStudent(studentId, teacherId), HttpStatus.CREATED);
     }
 
     // Essentially updating assignment
     @PutMapping("/assignment/submit/{assignmentId}")
-    public ResponseEntity<AssignmentsResponse> submitAssignment(@PathVariable String assignmentId,
+    public ResponseEntity<?> submitAssignment(@PathVariable String assignmentId,
             @RequestParam MultipartFile submissionFile) {
-        return new ResponseEntity<>(studentsService.submitAssignment(assignmentId, submissionFile), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(studentsService.submitAssignment(assignmentId, submissionFile),
+                    HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

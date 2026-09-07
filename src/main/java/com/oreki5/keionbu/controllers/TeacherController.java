@@ -19,9 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsRequest;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
-import com.oreki5.keionbu.dtoInterfaces.LessonsRequest;
 import com.oreki5.keionbu.dtoInterfaces.LessonsResponse;
 import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateReq;
 import com.oreki5.keionbu.dtoModels.lessons.LessonsCreateReq;
 import com.oreki5.keionbu.services.FileManagementService;
 import com.oreki5.keionbu.services.TeachersService;
@@ -64,18 +64,20 @@ public class TeacherController {
 
     }
 
+    // Future update : add auth so that only the lesson author can access that record
     @GetMapping("/lessons/{id}")
-    public ResponseEntity<List<LessonsResponse>> getLessonData(@PathVariable String id) {
+    public ResponseEntity<LessonsResponse> getLessonData(@PathVariable String id) {
         return new ResponseEntity<>(teachersService.getLessonData(id), HttpStatus.OK);
 
     }
+
 
     @PutMapping("/lessons/{id}")
     public ResponseEntity<?> updateLesson(@PathVariable String id,
             @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
             @RequestPart(value = "request") @Valid LessonsCreateReq request) {
         try {
-            return new ResponseEntity<>(teachersService.updateLessonData(request, id), HttpStatus.OK);
+            return new ResponseEntity<>(teachersService.updateLessonData(request, id, lessonFile), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.OK);
@@ -95,7 +97,7 @@ public class TeacherController {
      */
 
     @PostMapping("/assignments")
-    public ResponseEntity<?> createAssignment(@RequestBody AssignmentsRequest request) {
+    public ResponseEntity<?> createAssignment(@RequestBody @Valid AssignmentsCreateReq request) {
         try {
             return new ResponseEntity<>(teachersService.createAssignment(request), HttpStatus.OK);
 
@@ -106,16 +108,17 @@ public class TeacherController {
 
     }
 
+    // filters will come later
     @GetMapping("/assignments")
     public ResponseEntity<List<AssignmentsResponse>> getAssignmentsWithFilters(
             @RequestParam(required = false) String studentId) {
-        return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(studentId), HttpStatus.OK);
+        return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(studentId,""), HttpStatus.OK);
 
     }
 
     @PutMapping("/assignments/edit/{id}")
     public ResponseEntity<?> editAssignment(@PathVariable String id,
-            @RequestBody AssignmentsRequest request) {
+            @RequestBody AssignmentsCreateReq request) {
         try {
             return new ResponseEntity<>(teachersService.editAssignment(request, id), HttpStatus.OK);
         } catch (Exception e) {
@@ -136,7 +139,11 @@ public class TeacherController {
 
     @DeleteMapping("/assignments/{id}")
     public void deleteAssignment(@PathVariable String id) {
-        teachersService.deleteAssignment(id);
+        try {
+            teachersService.deleteAssignment(id);
+        } catch (Exception e) {
+
+        }
     }
 
 }

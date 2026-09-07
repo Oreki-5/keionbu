@@ -16,6 +16,7 @@ import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.TeachersResponse;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateRes;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsSubmitRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersViewRes;
@@ -87,16 +88,24 @@ public class StudentsService {
      */
 
     public List<AssignmentsResponse> getAssignmentsOfStudent(String studentId, String teacherId) {
+        List<Assignments> list;
+        List<AssignmentsResponse> response = new ArrayList<>();
+        if (teacherId == null) {
+            list = assignmentsRepo.findAllByStudent(studentsRepo.findById(studentId).orElseThrow());
+            list.forEach(item -> {
+                response.add(new AssignmentsCreateRes(item));
+            });
 
-        if (teacherId.isEmpty()) {
-            List<AssignmentsResponse> list = assignmentsRepo
-                    .findAllByStudent(studentsRepo.findById(studentId).orElseThrow());
-            return list;
+        } else {
+            list = assignmentsRepo
+                    .findAllByStudentAndTeacher(studentsRepo.findById(studentId).orElseThrow(),
+                            teachersRepo.findById(teacherId).orElseThrow());
+            list.forEach(item -> {
+                response.add(new AssignmentsCreateRes(item));
+            });
         }
-        List<AssignmentsResponse> list = assignmentsRepo
-                .findAllByStudentAndTeacher(studentsRepo.findById(studentId).orElseThrow(),
-                        teachersRepo.findById(teacherId).orElseThrow());
-        return null;
+
+        return response;
     }
 
     @Transactional
@@ -111,8 +120,9 @@ public class StudentsService {
                 assignmentId);
 
         assignment.setSubmission(metadata);
+        assignment.setApprovalStatus("submitted");
 
         // Need to chanage response model here
-        return new AssignmentsCreateRes(assignment);
+        return new AssignmentsSubmitRes(assignmentsRepo.save(assignment));
     }
 }

@@ -11,11 +11,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.oreki5.keionbu.dbEntities.Assignments;
 import com.oreki5.keionbu.dbEntities.FileMetaData;
 import com.oreki5.keionbu.dbEntities.Lessons;
+import com.oreki5.keionbu.dbEntities.Students;
+import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsRequest;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.LessonsRequest;
 import com.oreki5.keionbu.dtoInterfaces.LessonsResponse;
 import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsApprovalReq;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsApprovalRes;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateReq;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateRes;
 import com.oreki5.keionbu.dtoModels.lessons.LessonsCreateRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
@@ -107,32 +112,50 @@ public class TeachersService {
 
     public AssignmentsResponse createAssignment(AssignmentsRequest request)
             throws UnsupportedDataTypeException, Exception {
+        AssignmentsCreateReq typedRequest = (AssignmentsCreateReq) request;
+        Students student = studentsRepo.findById(typedRequest.getStudentId()).orElseThrow();
+        Teachers teacher = teachersRepo.findById(typedRequest.getTeacherId()).orElseThrow();
+        Lessons lesson = lessonsRepo.findById(typedRequest.getLessonId()).orElseThrow();
+
         Assignments assignment = request.mapToAssignment(new Assignments());
-        if (assignmentsRepo.existsByStudentAndTeacherAndLesson(assignment.getStudent(), assignment.getTeacher(),
-                assignment.getLesson())) {
+
+        if (assignmentsRepo.existsByStudentAndTeacherAndLesson(student, teacher,
+                lesson)) {
             throw new Exception("Duplicate");
         }
+        assignment.setStudent(student);
+        assignment.setTeacher(teacher);
+        assignment.setLesson(lesson);
         return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
     }
 
-    public List<AssignmentsResponse> getAssignmentsWithFilters(String studentId) {
+    public List<AssignmentsResponse> getAssignmentsWithFilters(String studentId, String status) {
 
-        return null;
+        List<AssignmentsResponse> response = new ArrayList<>();
+        List<Assignments> list = assignmentsRepo.findAllByStudent(studentsRepo.findById(studentId).orElseThrow());
+        list.forEach(item -> {
+            response.add(new AssignmentsCreateRes(item));
+        });
+
+        return response;
     }
 
     public AssignmentsResponse editAssignment(AssignmentsRequest request, String id)
             throws UnsupportedDataTypeException, Exception {
-        Assignments assignment = request.mapToAssignment(assignmentsRepo.findById(id).orElseThrow());
-        return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
-    }
 
-    // public AssignmentsResponse approveAssignment(AssignmentsRequest request,
-    // String id)
-    // throws UnsupportedDataTypeException, Exception {
-    // Assignments assignment =
-    // request.mapToAssignment(assignmentsRepo.findById(id).orElseThrow());
-    // return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
-    // }
+        Assignments assignment = request.mapToAssignment(assignmentsRepo.findById(id).orElseThrow());
+
+        if (request instanceof AssignmentsApprovalReq) {
+            return new AssignmentsApprovalRes(assignmentsRepo.save(assignment));
+        } else {
+            AssignmentsCreateReq typedRequest = (AssignmentsCreateReq) request;
+            assignment.setStudent(studentsRepo.findById(typedRequest.getStudentId()).orElseThrow());
+            assignment.setTeacher(teachersRepo.findById(typedRequest.getTeacherId()).orElseThrow());
+            assignment.setLesson(lessonsRepo.findById(typedRequest.getLessonId()).orElseThrow());
+            return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
+
+        }
+    }
 
     public void deleteAssignment(String id) throws Exception {
         if (!assignmentsRepo.existsById(id)) {

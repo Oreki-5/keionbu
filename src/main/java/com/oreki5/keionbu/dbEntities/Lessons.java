@@ -19,8 +19,6 @@ public class Lessons extends BaseEntity {
     private String lessonName;
     private String lessonDesc;
     private List<String> objectives = new ArrayList<>();
-
-    @DBRef
     private FileMetaData lessonFile;
     private String lessonDifficulty;
     private long requiredScore;

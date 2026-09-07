@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
-import java.util.Objects;
 import java.util.UUID;
 
 import javax.management.InvalidAttributeValueException;
@@ -23,7 +22,7 @@ import com.oreki5.keionbu.utils.StorageDirEnum;
 @Service
 public class FileManagementService {
 
-    private final String STORAGE_DIR = "";
+    private final String STORAGE_DIR = "C:\\Users\\adity\\Desktop\\Oreki\\CS Related Projects\\StorageDirForProjects\\keionbu";
 
     public FileMetaData uploadFile(MultipartFile file, StorageDirEnum subDir, String userId)
             throws InvalidAttributeValueException, IOException {
@@ -33,7 +32,10 @@ public class FileManagementService {
         String storingName = UUID.randomUUID().toString();
         var fileToUpload = new File(STORAGE_DIR + subDir.getPath() + File.separator + file.getOriginalFilename());
 
-        if (Objects.equals(fileToUpload.getParent(), STORAGE_DIR + subDir.getPath())) {
+        String f = fileToUpload.getAbsoluteFile().toString();
+        String f2 = Paths.get(STORAGE_DIR + subDir.getPath()).toString();
+        boolean b = f.startsWith(f2);
+        if (!fileToUpload.getAbsoluteFile().toString().startsWith(Paths.get(STORAGE_DIR + subDir.getPath()).toString())) {
             throw new InvalidAttributeValueException("Invalid file name");
 
         }
@@ -42,7 +44,7 @@ public class FileManagementService {
 
         FileMetaData metadata = new FileMetaData(file.getOriginalFilename(), userId,
                 getFileExtension(file.getOriginalFilename()), file.getSize(), Instant.now(), ObjectId.get());
-        return null;
+        return metadata;
     }
 
     public File downloadFile(StorageDirEnum subDir, FileMetaData metadata) throws FileNotFoundException {
