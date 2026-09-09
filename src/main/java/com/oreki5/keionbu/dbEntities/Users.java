@@ -5,8 +5,10 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-
 public class Users extends BaseEntity {
     private String username;
     private String password;
+    private String email;
+    private String otp;
+    private boolean verified;
 }

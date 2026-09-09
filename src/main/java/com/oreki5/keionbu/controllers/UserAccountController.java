@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
+import com.oreki5.keionbu.dtoModels.auth.OtpVerificationReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsPassReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsUpdateReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersCreateReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersPassReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersUpdateReq;
+import com.oreki5.keionbu.services.EmailService;
 import com.oreki5.keionbu.services.UserAccountService;
 
 import jakarta.validation.Valid;
@@ -29,6 +30,9 @@ public class UserAccountController {
 
     @Autowired
     private UserAccountService userAccountService;
+
+    @Autowired
+    private EmailService mailService;
 
     // Don't forget to change the requetObject to the intented one for each
     // endpoint. also @Valid
@@ -45,6 +49,16 @@ public class UserAccountController {
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/teachers/verify")
+    public ResponseEntity<?> verifyTeacher(@RequestBody @Valid OtpVerificationReq request) {
+        try {
+            return new ResponseEntity<>(userAccountService.verifyOtp(request, "TEACHER"), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PutMapping("/teachers/{id}")
@@ -92,15 +106,22 @@ public class UserAccountController {
     public ResponseEntity<?> createStudent(@RequestBody @Valid StudentsCreateReq request) {
         try {
             return new ResponseEntity<>(userAccountService.createUser(request, "STUDENT"), HttpStatus.CREATED);
-        }
-        catch(MethodArgumentNotValidException e ){
-            
+        } catch (MethodArgumentNotValidException e) {
+
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.CONFLICT);
-        } 
-        catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
-        
+
+    }
+
+    @PostMapping("/students/verify")
+    public ResponseEntity<?> verifyStudents(@RequestBody @Valid OtpVerificationReq request) {
+        try {
+            return new ResponseEntity<>(userAccountService.verifyOtp(request, "STUDENT"), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
 
     }
 

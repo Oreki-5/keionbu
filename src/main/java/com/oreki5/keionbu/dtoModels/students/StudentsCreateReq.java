@@ -7,6 +7,7 @@ import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 
 import jakarta.activation.UnsupportedDataTypeException;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -20,6 +21,8 @@ public class StudentsCreateReq implements UserAccountRequest {
     private String firstName;
     @NotEmpty
     private String lastName;
+    @Email
+    private String email;
 
     @Override
     public Teachers mapToTeachers(Teachers teacher) throws UnsupportedDataTypeException {
@@ -33,6 +36,7 @@ public class StudentsCreateReq implements UserAccountRequest {
         student.setFirstName(firstName);
         student.setLastName(lastName);
         student.setUpdatedAt(Instant.now());
+        student.setEmail(email);
         return student;
     }
 

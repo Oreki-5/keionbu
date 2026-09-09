@@ -16,9 +16,14 @@ public class TeachersPassReq implements UserAccountRequest {
 
     @NotEmpty
     private String password;
+    @NotEmpty
+    private String retypedPassword;
 
     @Override
-    public Teachers mapToTeachers(Teachers teacher) {
+    public Teachers mapToTeachers(Teachers teacher) throws Exception {
+        if(password != retypedPassword){
+            throw new Exception("Passwords don't match");
+        }
         teacher.setPassword(password);
         teacher.setUpdatedAt(Instant.now());
         return teacher;

@@ -7,7 +7,7 @@ import jakarta.activation.UnsupportedDataTypeException;
 
 public interface UserAccountRequest {
 
-    Teachers mapToTeachers(Teachers teacher) throws UnsupportedDataTypeException;
-    Students mapToStudents(Students student) throws UnsupportedDataTypeException;
+    Teachers mapToTeachers(Teachers teacher) throws Exception;
+    Students mapToStudents(Students student) throws Exception;
 
 }

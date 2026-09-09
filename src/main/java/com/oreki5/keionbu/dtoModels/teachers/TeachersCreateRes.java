@@ -11,13 +11,17 @@ public class TeachersCreateRes implements UserAccountResponse {
     @NotEmpty
     private String id;
     @NotEmpty
-    private String username;
-    @NotEmpty
     private String firstName;
     @NotEmpty
     private String lastName;
     @NotEmpty
     private String subject;
+    @NotEmpty
+    private String email;
+    @NotEmpty
+    private String username;
+    @NotEmpty
+    private boolean verified;
 
     public TeachersCreateRes(Teachers teacher) {
         id = teacher.getId();
@@ -25,6 +29,8 @@ public class TeachersCreateRes implements UserAccountResponse {
         firstName = teacher.getFirstName();
         lastName = teacher.getLastName();
         subject = teacher.getSubject();
+        email = teacher.getEmail();
+        verified = teacher.isVerified();
     }
 
 }

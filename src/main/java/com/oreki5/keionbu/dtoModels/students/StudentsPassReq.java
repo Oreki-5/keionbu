@@ -16,13 +16,19 @@ public class StudentsPassReq implements UserAccountRequest {
     @NotEmpty
     private String password;
 
+    @NotEmpty
+    private String retypedPassword;
+
     @Override
     public Teachers mapToTeachers(Teachers teacher) throws UnsupportedDataTypeException {
         throw new UnsupportedOperationException("Invalid data given");
     }
 
     @Override
-    public Students mapToStudents(Students student) throws UnsupportedDataTypeException {
+    public Students mapToStudents(Students student) throws Exception {
+        if(password != retypedPassword){
+            throw new Exception("Passwords don't match");
+        }
         student.setPassword(password);
         student.setUpdatedAt(Instant.now());
         return student;
