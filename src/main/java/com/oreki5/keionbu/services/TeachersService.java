@@ -80,7 +80,8 @@ public class TeachersService {
             lesson.setLessonFile(metadata);
 
         }
-        return new LessonsCreateRes(lessonsRepo.save(lesson));
+        lessonsRepo.save(lesson);
+        return new LessonsCreateRes(lesson);
     }
 
     public LessonsResponse getLessonData(String id) {
@@ -157,6 +158,7 @@ public class TeachersService {
         }
     }
 
+    @Transactional
     public void deleteAssignment(String id) throws Exception {
         if (!assignmentsRepo.existsById(id)) {
             throw new Exception("record doesnt exist");

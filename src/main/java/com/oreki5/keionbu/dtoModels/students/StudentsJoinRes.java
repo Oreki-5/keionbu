@@ -5,13 +5,14 @@ import java.util.List;
 
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
+import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersCreateRes;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data 
-public class StudentsJoinRes {
+public class StudentsJoinRes implements StudentsResponse{
     @NotEmpty
     private String id;
     @NotEmpty

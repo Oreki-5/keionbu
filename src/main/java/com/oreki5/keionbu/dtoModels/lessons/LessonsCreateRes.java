@@ -15,7 +15,7 @@ public class LessonsCreateRes implements LessonsResponse {
     private String lessonName;
     private String lessonDesc;
     private List<String> objectives = new ArrayList<>();
-    // lesson file file column
+    private String lessonFile;
     private String lessonDifficulty;
     private long requiredScore;
 
@@ -27,5 +27,6 @@ public class LessonsCreateRes implements LessonsResponse {
         objectives = lesson.getObjectives();
         lessonDifficulty = lesson.getLessonDifficulty();
         requiredScore = lesson.getRequiredScore();
+        lessonFile = lesson.getLessonFile().originalName();
     }
 }

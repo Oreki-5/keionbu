@@ -12,6 +12,7 @@ public class AssignmentsCreateRes implements AssignmentsResponse {
     private String teacherName;
     private String lessonName;
     private String comment;
+    private String status;
 
     public AssignmentsCreateRes(Assignments assignment) {
         id = assignment.getId();
@@ -19,5 +20,6 @@ public class AssignmentsCreateRes implements AssignmentsResponse {
         teacherName = assignment.getTeacher().getFirstName() + " " + assignment.getTeacher().getLastName();
         lessonName = assignment.getLesson().getLessonName();
         comment = assignment.getComment();
+        status = assignment.getApprovalStatus();
     }
 }

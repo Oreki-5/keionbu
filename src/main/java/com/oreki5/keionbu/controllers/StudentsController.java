@@ -1,5 +1,7 @@
 package com.oreki5.keionbu.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.oreki5.keionbu.dtoInterfaces.TeachersResponse;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinReq;
 import com.oreki5.keionbu.services.FileManagementService;
 import com.oreki5.keionbu.services.StudentsService;
@@ -32,12 +35,13 @@ public class StudentsController {
      * Teacher joining related
      */
 
-    // @GetMapping("/teachers")
-    // public ResponseEntity<List<TeachersResponse>> getAllTeachers() {
-    // return new ResponseEntity<>(studentsService.getAllTeachers(), HttpStatus.OK);
-    // }
+    @GetMapping("/teachers")
+    public ResponseEntity<List<TeachersResponse>> getAllTeachers() {
+        return new ResponseEntity<>(studentsService.getAllTeachers(), HttpStatus.OK);
+    }
+
     @GetMapping("/teachers/{id}")
-    public ResponseEntity<?> getAllTeachers(@PathVariable String id) {
+    public ResponseEntity<List<TeachersResponse>> getAllTeachers(@PathVariable String id) {
         return new ResponseEntity<>(studentsService.getJoinedTeachers(id), HttpStatus.OK);
     }
 
@@ -50,6 +54,15 @@ public class StudentsController {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/teacher/leave")
+    public ResponseEntity<?> leaveTeacher(@RequestBody @Valid StudentsJoinReq request) {
+        try {
+            return new ResponseEntity<>(studentsService.leaveTeacher(request), HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     /*
      * Assignments related
@@ -57,7 +70,7 @@ public class StudentsController {
 
     @GetMapping("/assignments/{studentId}")
     public ResponseEntity<?> getAssignmentsOfStudent(@PathVariable String studentId,
-            @RequestParam(required=false) String teacherId) {
+            @RequestParam(required = false) String teacherId) {
         return new ResponseEntity<>(studentsService.getAssignmentsOfStudent(studentId, teacherId), HttpStatus.CREATED);
     }
 

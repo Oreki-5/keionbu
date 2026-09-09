@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.oreki5.keionbu.dbEntities.Assignments;
 import com.oreki5.keionbu.dbEntities.FileMetaData;
+import com.oreki5.keionbu.dbEntities.FileMetaData;
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
@@ -19,6 +20,7 @@ import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateRes;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsSubmitRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinReq;
+import com.oreki5.keionbu.dtoModels.students.StudentsJoinRes;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersViewRes;
 import com.oreki5.keionbu.repositories.AssignmentsRepo;
 import com.oreki5.keionbu.repositories.StudentsRepo;
@@ -80,7 +82,27 @@ public class StudentsService {
         teachersRepo.save(teacher);
 
         // verify the correct response
-        return new StudentsCreateRes(studentsRepo.save(student));
+        return new StudentsJoinRes(studentsRepo.save(student));
+    }
+
+    @Transactional
+    public StudentsResponse leaveTeacher(StudentsJoinReq request) throws Exception {
+
+        Students student = studentsRepo.findById(request.getId()).orElseThrow();
+        Teachers teacher = teachersRepo.findById(request.getTeacherId()).orElseThrow();
+
+        List<Teachers> exisitingList = student.getTeachersList();
+        exisitingList.remove(teacher);
+        student.setTeachersList(exisitingList);
+
+        List<Students> enrolledStudents = teacher.getStudents();
+        enrolledStudents.remove(student);
+        teacher.setStudents(enrolledStudents);
+
+        teachersRepo.save(teacher);
+
+        // verify the correct response
+        return new StudentsJoinRes(studentsRepo.save(student));
     }
 
     /*

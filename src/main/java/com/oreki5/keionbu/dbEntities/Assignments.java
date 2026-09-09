@@ -15,6 +15,7 @@ public class Assignments extends BaseEntity{
     private Teachers teacher;
     @DBRef
     private Lessons lesson;
+    @DBRef 
     private FileMetaData submission;
     private String approvalStatus;
     private int score;

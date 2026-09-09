@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.oreki5.keionbu.dtoInterfaces.AssignmentsRequest;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.LessonsResponse;
 import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsApprovalReq;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateReq;
 import com.oreki5.keionbu.dtoModels.lessons.LessonsCreateReq;
 import com.oreki5.keionbu.services.FileManagementService;
@@ -129,7 +129,7 @@ public class TeacherController {
 
     @PutMapping("/assignments/approve/{id}")
     public ResponseEntity<?> approveAssignment(@PathVariable String id,
-            @RequestBody AssignmentsRequest request) {
+            @RequestBody AssignmentsApprovalReq request) {
         try {
             return new ResponseEntity<>(teachersService.editAssignment(request, id), HttpStatus.OK);
         } catch (Exception e) {

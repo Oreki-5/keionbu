@@ -23,7 +23,7 @@ public class AssignmentsSubmitRes implements AssignmentsResponse {
         lessonName = assignment.getLesson().getLessonName();
         approvalStatus = assignment.getApprovalStatus();
         submission = assignment.getSubmission();
-        
+        comment = assignment.getComment();
 
     }
 }
