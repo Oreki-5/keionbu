@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
+import com.oreki5.keionbu.dtoInterfaces.TeachersRequest;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 
 import jakarta.activation.UnsupportedDataTypeException;
@@ -12,7 +13,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class TeachersPassReq implements UserAccountRequest {
+public class TeachersPassReq implements UserAccountRequest, TeachersRequest {
 
     @NotEmpty
     private String password;

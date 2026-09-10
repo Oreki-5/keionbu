@@ -2,12 +2,10 @@ package com.oreki5.keionbu.dtoInterfaces;
 
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
+import com.oreki5.keionbu.dbEntities.Users;
 
 import jakarta.activation.UnsupportedDataTypeException;
 
-public interface UserAccountRequest {
-
-    Teachers mapToTeachers(Teachers teacher) throws Exception;
-    Students mapToStudents(Students student) throws Exception;
+public interface UserAccountRequest extends TeachersRequest, StudentsRequest {
 
 }

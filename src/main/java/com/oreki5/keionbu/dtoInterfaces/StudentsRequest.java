@@ -1,10 +1,11 @@
 package com.oreki5.keionbu.dtoInterfaces;
 
 import com.oreki5.keionbu.dbEntities.Students;
+import com.oreki5.keionbu.dbEntities.Users;
 
 import jakarta.activation.UnsupportedDataTypeException;
 
 public interface StudentsRequest {
-    Students mapToStudents(Students student) throws UnsupportedDataTypeException;
+    Users mapToStudents(Students student) throws Exception;
     
 }

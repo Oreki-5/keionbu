@@ -21,6 +21,7 @@ import com.oreki5.keionbu.dtoModels.teachers.TeachersPassReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersUpdateReq;
 import com.oreki5.keionbu.services.EmailService;
 import com.oreki5.keionbu.services.UserAccountService;
+import com.oreki5.keionbu.utils.UserRolesEnum;
 
 import jakarta.validation.Valid;
 
@@ -44,7 +45,7 @@ public class UserAccountController {
     @PostMapping("/teachers")
     public ResponseEntity<?> createTeacher(@RequestBody @Valid TeachersCreateReq request) {
         try {
-            return new ResponseEntity<>(userAccountService.createUser(request, "TEACHER"), HttpStatus.CREATED);
+            return new ResponseEntity<>(userAccountService.createUser(request), HttpStatus.CREATED);
 
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
@@ -54,7 +55,8 @@ public class UserAccountController {
     @PostMapping("/teachers/verify")
     public ResponseEntity<?> verifyTeacher(@RequestBody @Valid OtpVerificationReq request) {
         try {
-            return new ResponseEntity<>(userAccountService.verifyOtp(request, "TEACHER"), HttpStatus.CREATED);
+            return new ResponseEntity<>(userAccountService.verifyOtp(request, UserRolesEnum.TEACHER),
+                    HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
@@ -65,7 +67,7 @@ public class UserAccountController {
     public ResponseEntity<?> updateTeacher(@PathVariable String id,
             @RequestBody @Valid TeachersUpdateReq request) {
         try {
-            return new ResponseEntity<>(userAccountService.updateUser(id, request, "TEACHER"), HttpStatus.CREATED);
+            return new ResponseEntity<>(userAccountService.updateUser(id, request), HttpStatus.CREATED);
 
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
@@ -77,7 +79,7 @@ public class UserAccountController {
     public ResponseEntity<?> updateTeacherPass(@PathVariable String id,
             @RequestBody @Valid TeachersPassReq request) {
         try {
-            userAccountService.updateUser(id, request, "TEACHER");
+            userAccountService.updateUser(id, request);
             return new ResponseEntity<>("Password Updated", HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
@@ -89,7 +91,7 @@ public class UserAccountController {
     @DeleteMapping("/teachers/{id}")
     public ResponseEntity<?> softDeleteTeacher(@PathVariable String id) {
         try {
-            userAccountService.softDeleteUser(id, "TEACHER");
+            userAccountService.softDeleteUser(id);
             return new ResponseEntity<>("Deleted Successfully", HttpStatus.NO_CONTENT);
 
         } catch (IllegalArgumentException e) {
@@ -105,7 +107,7 @@ public class UserAccountController {
     @PostMapping("/students")
     public ResponseEntity<?> createStudent(@RequestBody @Valid StudentsCreateReq request) {
         try {
-            return new ResponseEntity<>(userAccountService.createUser(request, "STUDENT"), HttpStatus.CREATED);
+            return new ResponseEntity<>(userAccountService.createUser(request), HttpStatus.CREATED);
         } catch (MethodArgumentNotValidException e) {
 
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.CONFLICT);
@@ -118,7 +120,8 @@ public class UserAccountController {
     @PostMapping("/students/verify")
     public ResponseEntity<?> verifyStudents(@RequestBody @Valid OtpVerificationReq request) {
         try {
-            return new ResponseEntity<>(userAccountService.verifyOtp(request, "STUDENT"), HttpStatus.CREATED);
+            return new ResponseEntity<>(userAccountService.verifyOtp(request, UserRolesEnum.STUDENT),
+                    HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
@@ -129,7 +132,7 @@ public class UserAccountController {
     public ResponseEntity<?> updateStudent(@PathVariable String id,
             @RequestBody @Valid StudentsUpdateReq request) {
         try {
-            return new ResponseEntity<>(userAccountService.updateUser(id, request, "STUDENT"), HttpStatus.CREATED);
+            return new ResponseEntity<>(userAccountService.updateUser(id, request), HttpStatus.CREATED);
 
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
@@ -142,7 +145,7 @@ public class UserAccountController {
     public ResponseEntity<?> updateStudentPass(@PathVariable String id,
             @RequestBody @Valid StudentsPassReq request) {
         try {
-            userAccountService.updateUser(id, request, "STUDENT");
+            userAccountService.updateUser(id, request);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
@@ -155,7 +158,7 @@ public class UserAccountController {
     @DeleteMapping("/students/{id}")
     public ResponseEntity<?> softDeleteStudent(@PathVariable String id) {
         try {
-            userAccountService.softDeleteUser(id, "STUDENT");
+            userAccountService.softDeleteUser(id);
             return new ResponseEntity<>("Deleted Successfully", HttpStatus.NO_CONTENT);
 
         } catch (IllegalArgumentException e) {

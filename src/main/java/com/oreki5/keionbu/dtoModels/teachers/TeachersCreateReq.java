@@ -38,6 +38,7 @@ public class TeachersCreateReq implements UserAccountRequest {
         teacher.setSubject(subject);
         teacher.setStudents(new ArrayList<>());
         teacher.setEmail(email);
+        teacher.setRole("ROLE_TEACHER");
         return teacher;
     }
 
