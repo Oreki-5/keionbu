@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class TeacherController {
      * Music lessons related endpoints
      */
 
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @PostMapping("/lessons/{teacherId}")
     public ResponseEntity<?> createLesson(@PathVariable String teacherId,
             @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
@@ -64,14 +66,16 @@ public class TeacherController {
 
     }
 
-    // Future update : add auth so that only the lesson author can access that record
+    // Future update : add auth so that only the lesson author can access that
+    // record
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @GetMapping("/lessons/{id}")
     public ResponseEntity<LessonsResponse> getLessonData(@PathVariable String id) {
         return new ResponseEntity<>(teachersService.getLessonData(id), HttpStatus.OK);
 
     }
 
-
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @PutMapping("/lessons/{id}")
     public ResponseEntity<?> updateLesson(@PathVariable String id,
             @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
@@ -86,6 +90,7 @@ public class TeacherController {
 
     }
 
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @DeleteMapping("/lessons/{id}")
     public void softDeleteLesson(@PathVariable String id) {
         teachersService.softDeleteLesson(id);
@@ -96,6 +101,7 @@ public class TeacherController {
      * Assignment related endpoints
      */
 
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @PostMapping("/assignments")
     public ResponseEntity<?> createAssignment(@RequestBody @Valid AssignmentsCreateReq request) {
         try {
@@ -109,13 +115,15 @@ public class TeacherController {
     }
 
     // filters will come later
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @GetMapping("/assignments")
     public ResponseEntity<List<AssignmentsResponse>> getAssignmentsWithFilters(
             @RequestParam(required = false) String studentId) {
-        return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(studentId,""), HttpStatus.OK);
+        return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(studentId, ""), HttpStatus.OK);
 
     }
 
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @PutMapping("/assignments/edit/{id}")
     public ResponseEntity<?> editAssignment(@PathVariable String id,
             @RequestBody AssignmentsCreateReq request) {
@@ -127,6 +135,7 @@ public class TeacherController {
 
     }
 
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @PutMapping("/assignments/approve/{id}")
     public ResponseEntity<?> approveAssignment(@PathVariable String id,
             @RequestBody AssignmentsApprovalReq request) {
@@ -137,6 +146,7 @@ public class TeacherController {
         }
     }
 
+    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @DeleteMapping("/assignments/{id}")
     public void deleteAssignment(@PathVariable String id) {
         try {

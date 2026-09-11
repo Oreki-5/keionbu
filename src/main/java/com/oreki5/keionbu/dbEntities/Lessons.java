@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Lessons extends BaseEntity {
     @DBRef
-    private Teachers teacher;
+    private Users teacher;
     private long lessonNo;
     private String lessonName;
     private String lessonDesc;

@@ -13,6 +13,7 @@ import com.oreki5.keionbu.dbEntities.FileMetaData;
 import com.oreki5.keionbu.dbEntities.FileMetaData;
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
+import com.oreki5.keionbu.dbEntities.Users;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.TeachersResponse;
@@ -25,15 +26,14 @@ import com.oreki5.keionbu.dtoModels.teachers.TeachersViewRes;
 import com.oreki5.keionbu.repositories.AssignmentsRepo;
 import com.oreki5.keionbu.repositories.StudentsRepo;
 import com.oreki5.keionbu.repositories.TeachersRepo;
+import com.oreki5.keionbu.repositories.UsersRepo;
 import com.oreki5.keionbu.utils.StorageDirEnum;
 
 @Service
 public class StudentsService {
 
     @Autowired
-    private TeachersRepo teachersRepo;
-    @Autowired
-    private StudentsRepo studentsRepo;
+    private UsersRepo usersRepo;
     @Autowired
     private AssignmentsRepo assignmentsRepo;
 
@@ -44,7 +44,7 @@ public class StudentsService {
      */
 
     public List<TeachersResponse> getAllTeachers() {
-        List<Teachers> list = teachersRepo.findAll();
+        List<Teachers> list = usersRepo.findAllTeachers();
         List<TeachersResponse> response = new ArrayList<>();
         list.forEach(teacher -> {
             response.add(new TeachersViewRes(teacher));
@@ -52,8 +52,9 @@ public class StudentsService {
         return response;
     }
 
-    public List<TeachersResponse> getJoinedTeachers(String id) {
-        List<Teachers> list = studentsRepo.findById(id).get().getTeachersList();
+    public List<TeachersResponse> getJoinedTeachers(String id) throws Exception {
+        Students student = (Students) usersRepo.findById(id).orElseThrow();
+        List<Teachers> list = student.getTeachersList();
         List<TeachersResponse> response = new ArrayList<>();
         list.forEach(teacher -> {
             response.add(new TeachersViewRes(teacher));
@@ -65,8 +66,8 @@ public class StudentsService {
     @Transactional
     public StudentsResponse joinTeacher(StudentsJoinReq request) throws Exception {
 
-        Students student = studentsRepo.findById(request.getId()).orElseThrow();
-        Teachers teacher = teachersRepo.findById(request.getTeacherId()).orElseThrow();
+        Students student = (Students) usersRepo.findById(request.getId()).orElseThrow();
+        Teachers teacher = (Teachers) usersRepo.findById(request.getTeacherId()).orElseThrow();
 
         List<Teachers> exisitingList = student.getTeachersList();
         if (exisitingList.contains(teacher)) {
@@ -79,17 +80,17 @@ public class StudentsService {
         enrolledStudents.add(student);
         teacher.setStudents(enrolledStudents);
 
-        teachersRepo.save(teacher);
+        usersRepo.save(teacher);
 
         // verify the correct response
-        return new StudentsJoinRes(studentsRepo.save(student));
+        return new StudentsJoinRes(usersRepo.save((Students) student));
     }
 
     @Transactional
     public StudentsResponse leaveTeacher(StudentsJoinReq request) throws Exception {
 
-        Students student = studentsRepo.findById(request.getId()).orElseThrow();
-        Teachers teacher = teachersRepo.findById(request.getTeacherId()).orElseThrow();
+        Students student = (Students) usersRepo.findById(request.getId()).orElseThrow();
+        Teachers teacher = (Teachers) usersRepo.findById(request.getTeacherId()).orElseThrow();
 
         List<Teachers> exisitingList = student.getTeachersList();
         exisitingList.remove(teacher);
@@ -99,10 +100,10 @@ public class StudentsService {
         enrolledStudents.remove(student);
         teacher.setStudents(enrolledStudents);
 
-        teachersRepo.save(teacher);
+        usersRepo.save(teacher);
 
         // verify the correct response
-        return new StudentsJoinRes(studentsRepo.save(student));
+        return new StudentsJoinRes(usersRepo.save(student));
     }
 
     /*
@@ -113,15 +114,16 @@ public class StudentsService {
         List<Assignments> list;
         List<AssignmentsResponse> response = new ArrayList<>();
         if (teacherId == null) {
-            list = assignmentsRepo.findAllByStudent(studentsRepo.findById(studentId).orElseThrow());
+            // Students student = (Students) usersRepo.findById(studentId).orElseThrow();
+            list = assignmentsRepo.findAllByStudent(usersRepo.findById(studentId).orElseThrow());
             list.forEach(item -> {
                 response.add(new AssignmentsCreateRes(item));
             });
 
         } else {
             list = assignmentsRepo
-                    .findAllByStudentAndTeacher(studentsRepo.findById(studentId).orElseThrow(),
-                            teachersRepo.findById(teacherId).orElseThrow());
+                    .findAllByStudentAndTeacher(usersRepo.findById(studentId).orElseThrow(),
+                            usersRepo.findById(teacherId).orElseThrow());
             list.forEach(item -> {
                 response.add(new AssignmentsCreateRes(item));
             });

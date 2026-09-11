@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,16 +36,25 @@ public class StudentsController {
      * Teacher joining related
      */
 
+    @PreAuthorize("hasRole(ROLE_STUDENT)")
     @GetMapping("/teachers")
     public ResponseEntity<List<TeachersResponse>> getAllTeachers() {
         return new ResponseEntity<>(studentsService.getAllTeachers(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole(ROLE_STUDENT)")
     @GetMapping("/teachers/{id}")
-    public ResponseEntity<List<TeachersResponse>> getAllTeachers(@PathVariable String id) {
-        return new ResponseEntity<>(studentsService.getJoinedTeachers(id), HttpStatus.OK);
+    public ResponseEntity<?> getAllTeachers(@PathVariable String id) {
+        try {
+            return new ResponseEntity<>(studentsService.getJoinedTeachers(id), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
+    @PreAuthorize("hasRole(ROLE_STUDENT)")
     @PostMapping("/teacher/join")
     public ResponseEntity<?> joinTeacher(@RequestBody @Valid StudentsJoinReq request) {
         try {
@@ -54,6 +64,8 @@ public class StudentsController {
             return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasRole(ROLE_STUDENT)")
     @PostMapping("/teacher/leave")
     public ResponseEntity<?> leaveTeacher(@RequestBody @Valid StudentsJoinReq request) {
         try {
@@ -68,6 +80,7 @@ public class StudentsController {
      * Assignments related
      */
 
+    @PreAuthorize("hasRole(ROLE_STUDENT)")
     @GetMapping("/assignments/{studentId}")
     public ResponseEntity<?> getAssignmentsOfStudent(@PathVariable String studentId,
             @RequestParam(required = false) String teacherId) {
@@ -75,6 +88,7 @@ public class StudentsController {
     }
 
     // Essentially updating assignment
+    @PreAuthorize("hasRole(ROLE_STUDENT)")
     @PutMapping("/assignment/submit/{assignmentId}")
     public ResponseEntity<?> submitAssignment(@PathVariable String assignmentId,
             @RequestParam MultipartFile submissionFile) {

@@ -1,25 +1,25 @@
-// package com.oreki5.keionbu.config;
+package com.oreki5.keionbu.config;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-// import com.oreki5.keionbu.dbEntities.Users;
-// import com.oreki5.keionbu.repositories.StudentsRepo;
-// import com.oreki5.keionbu.repositories.TeachersRepo;
-
-// public class CustomUserDetailsService implements UserDetailsService {
-
-//     @Autowired 
-//     private TeachersRepo teachersRepo;
-    
-//     @Autowired 
-//     private StudentsRepo studentsRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 
-//     @Override
-//     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//         return new CustomUserDetails(new Users());
-//     }
+import com.oreki5.keionbu.dbEntities.Users;
+import com.oreki5.keionbu.repositories.StudentsRepo;
+import com.oreki5.keionbu.repositories.TeachersRepo;
+import com.oreki5.keionbu.repositories.UsersRepo;
 
-// }
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private UsersRepo usersRepo;
+
+    @Override
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return new CustomUserDetails(usersRepo.findByUsername(username));
+    }
+
+}

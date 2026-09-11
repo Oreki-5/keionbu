@@ -4,6 +4,7 @@ import com.oreki5.keionbu.controllers.GlobalExceptionHandler;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +31,6 @@ import com.oreki5.keionbu.utils.UserRolesEnum;
 public class UserAccountService {
 
     @Autowired
-    private TeachersRepo teachersRepo;
-    @Autowired
-    private StudentsRepo studentsRepo;
-    @Autowired
     private UsersRepo usersRepo;
 
     @Autowired
@@ -48,7 +45,9 @@ public class UserAccountService {
         } else {
             user = request.mapToStudents(new Students());
         }
+        user.setPassword(passEncoder(user.getPassword()));
         user.setOtp(sendOtp(user));
+        
         if (usersRepo.existsByUsername(user.getUsername())) {
             throw new Exception("Duplicate Record");
         }
@@ -61,21 +60,21 @@ public class UserAccountService {
         // case "TEACHER" -> {
         // Teachers teacher =
         // teacher.setPassword(passEncoder(teacher.getPassword()));
-        // if (teachersRepo.existsByUsername(teacher.getUsername())) {
+        // if (usersRepo.existsByUsername(teacher.getUsername())) {
         // throw new Exception("Duplicate Username");
         // }
         // teacher.setOtp(sendOtp(teacher));
-        // return new TeachersCreateRes(teachersRepo.save(teacher));
+        // return new TeachersCreateRes(usersRepo.save(teacher));
 
         // }
         // case "STUDENT" -> {
         // Students student = request.mapToStudents(new Students());
         // student.setPassword(passEncoder(student.getPassword()));
-        // if (studentsRepo.existsByUsername(student.getUsername())) {
+        // if (usersRepo.existsByUsername(student.getUsername())) {
         // throw new Exception("Duplicate Username");
         // }
         // student.setOtp(sendOtp(student));
-        // return new StudentsCreateRes(studentsRepo.save(student));
+        // return new StudentsCreateRes(usersRepo.save((Students) student));
         // }
         // }
         // throw new UnsupportedOperationException("Invalid data provided");
@@ -103,11 +102,11 @@ public class UserAccountService {
 
         // switch (role) {
         // case "TEACHER" -> {
-        // Teachers teacher = teachersRepo.findById(request.getId()).orElseThrow();
+        // Teachers teacher = usersRepo.findById(request.getId()).orElseThrow();
         // if (teacher.getOtp().equals(request.getOtp())) {
         // teacher.setOtp("");
         // teacher.setVerified(true);
-        // return new TeachersCreateRes(teachersRepo.save(teacher));
+        // return new TeachersCreateRes(usersRepo.save(teacher));
 
         // } else {
         // throw new SecurityException("OTP is not correct");
@@ -115,11 +114,11 @@ public class UserAccountService {
 
         // }
         // case "STUDENT" -> {
-        // Students student = studentsRepo.findById(request.getId()).orElseThrow();
+        // Students student = usersRepo.findById(request.getId()).orElseThrow();
         // if (student.getOtp().equals(request.getOtp())) {
         // student.setOtp("");
         // student.setVerified(true);
-        // return new StudentsCreateRes(studentsRepo.save(student));
+        // return new StudentsCreateRes(usersRepo.save((Students) student));
 
         // } else {
         // throw new SecurityException("OTP is not correct");
@@ -138,7 +137,7 @@ public class UserAccountService {
         } else {
             user = request.mapToStudents((Students) usersRepo.findById(id).orElseThrow());
         }
-        
+
         if (request instanceof StudentsPassReq || request instanceof TeachersPassReq) {
             user.setPassword(passEncoder(user.getPassword()));
         }
@@ -155,16 +154,16 @@ public class UserAccountService {
         // if (request instanceof TeachersPassReq) {
         // teacher.setPassword(passEncoder(teacher.getPassword()));
         // }
-        // return new TeachersCreateRes(teachersRepo.save(teacher));
+        // return new TeachersCreateRes(usersRepo.save(teacher));
         // }
         // case "STUDENT" -> {
 
         // Students student =
-        // request.mapToStudents(studentsRepo.findById(id).orElseThrow());
+        // request.mapToStudents(usersRepo.findById(id).orElseThrow());
         // if (request instanceof StudentsPassReq) {
         // student.setPassword(passEncoder(student.getPassword()));
         // }
-        // return new StudentsCreateRes(studentsRepo.save(student));
+        // return new StudentsCreateRes(usersRepo.save((Students) student));
         // }
         // }
         // throw new UnsupportedOperationException("Invalid data provided");
@@ -176,8 +175,8 @@ public class UserAccountService {
     }
 
     public String passEncoder(String input) {
-
-        return "encyrpted:" + input;
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        return encoder.encode(input);
 
     }
 

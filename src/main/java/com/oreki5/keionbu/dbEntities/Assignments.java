@@ -10,9 +10,9 @@ import lombok.EqualsAndHashCode;
 public class Assignments extends BaseEntity{
 
     @DBRef 
-    private Students student;
+    private Users student;
     @DBRef
-    private Teachers teacher;
+    private Users teacher;
     @DBRef
     private Lessons lesson;
     @DBRef 

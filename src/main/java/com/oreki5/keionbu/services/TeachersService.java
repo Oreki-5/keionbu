@@ -28,6 +28,7 @@ import com.oreki5.keionbu.repositories.AssignmentsRepo;
 import com.oreki5.keionbu.repositories.LessonsRepo;
 import com.oreki5.keionbu.repositories.StudentsRepo;
 import com.oreki5.keionbu.repositories.TeachersRepo;
+import com.oreki5.keionbu.repositories.UsersRepo;
 import com.oreki5.keionbu.utils.StorageDirEnum;
 
 import jakarta.activation.UnsupportedDataTypeException;
@@ -36,9 +37,7 @@ import jakarta.activation.UnsupportedDataTypeException;
 public class TeachersService {
 
     @Autowired
-    private TeachersRepo teachersRepo;
-    @Autowired
-    private StudentsRepo studentsRepo;
+    private UsersRepo usersRepo;
     @Autowired
     private LessonsRepo lessonsRepo;
     @Autowired
@@ -53,8 +52,8 @@ public class TeachersService {
     public List<StudentsResponse> getStudentsOfTeacher(String id) {
         // Teachers teacher = ;
         List<StudentsResponse> listOfStudents = new ArrayList<>();
-
-        teachersRepo.findById(id).orElseThrow().getStudents().forEach(student -> {
+        Teachers teacher = (Teachers) usersRepo.findById(id).orElseThrow();
+        teacher.getStudents().forEach(student -> {
             listOfStudents.add((StudentsResponse) new StudentsCreateRes(student));
         });
 
@@ -70,7 +69,7 @@ public class TeachersService {
             throws UnsupportedDataTypeException, Exception {
 
         Lessons lesson = request.mapToLessons(new Lessons());
-        lesson.setTeacher(teachersRepo.findById(teacherId).orElseThrow());
+        lesson.setTeacher(usersRepo.findById(teacherId).orElseThrow());
         if (lessonsRepo.existsByLessonNoAndTeacher(lesson.getLessonNo(), lesson.getTeacher())) {
             throw new Exception("Duplicate");
         }
@@ -114,8 +113,9 @@ public class TeachersService {
     public AssignmentsResponse createAssignment(AssignmentsRequest request)
             throws UnsupportedDataTypeException, Exception {
         AssignmentsCreateReq typedRequest = (AssignmentsCreateReq) request;
-        Students student = studentsRepo.findById(typedRequest.getStudentId()).orElseThrow();
-        Teachers teacher = teachersRepo.findById(typedRequest.getTeacherId()).orElseThrow();
+
+        Students student = (Students) usersRepo.findById(typedRequest.getStudentId()).orElseThrow();
+        Teachers teacher = (Teachers) usersRepo.findById(typedRequest.getTeacherId()).orElseThrow();
         Lessons lesson = lessonsRepo.findById(typedRequest.getLessonId()).orElseThrow();
 
         Assignments assignment = request.mapToAssignment(new Assignments());
@@ -133,7 +133,7 @@ public class TeachersService {
     public List<AssignmentsResponse> getAssignmentsWithFilters(String studentId, String status) {
 
         List<AssignmentsResponse> response = new ArrayList<>();
-        List<Assignments> list = assignmentsRepo.findAllByStudent(studentsRepo.findById(studentId).orElseThrow());
+        List<Assignments> list = assignmentsRepo.findAllByStudent(usersRepo.findById(studentId).orElseThrow());
         list.forEach(item -> {
             response.add(new AssignmentsCreateRes(item));
         });
@@ -150,8 +150,8 @@ public class TeachersService {
             return new AssignmentsApprovalRes(assignmentsRepo.save(assignment));
         } else {
             AssignmentsCreateReq typedRequest = (AssignmentsCreateReq) request;
-            assignment.setStudent(studentsRepo.findById(typedRequest.getStudentId()).orElseThrow());
-            assignment.setTeacher(teachersRepo.findById(typedRequest.getTeacherId()).orElseThrow());
+            assignment.setStudent(usersRepo.findById(typedRequest.getStudentId()).orElseThrow());
+            assignment.setTeacher(usersRepo.findById(typedRequest.getTeacherId()).orElseThrow());
             assignment.setLesson(lessonsRepo.findById(typedRequest.getLessonId()).orElseThrow());
             return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
 
@@ -160,7 +160,7 @@ public class TeachersService {
 
     @Transactional
     public void deleteAssignment(String id) throws Exception {
-        
+
         if (!assignmentsRepo.existsById(id)) {
             throw new Exception("record doesnt exist");
         }
