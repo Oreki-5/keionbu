@@ -4,8 +4,8 @@ import java.time.Instant;
 
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
-import com.oreki5.keionbu.dbEntities.Users;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
+import com.oreki5.keionbu.utils.Role;
 
 import jakarta.activation.UnsupportedDataTypeException;
 import jakarta.validation.constraints.Email;
@@ -35,7 +35,7 @@ public class StudentsCreateReq implements UserAccountRequest {
         student.setLastName(lastName);
         student.setUpdatedAt(Instant.now());
         student.setEmail(email);
-        student.setRole("ROLE_STUDENT");
+        student.setRole(Role.STUDENT.getRole());
         return student;
     }
 

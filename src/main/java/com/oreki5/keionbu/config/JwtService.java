@@ -26,16 +26,17 @@ public class JwtService {
 
     public String generateToken(Users user) throws NoSuchAlgorithmException {
 
-        Map<String, String> claims = new HashMap<>();
+        Map<String,String> claims = new HashMap<>();
         claims.put("role", user.getRole());
         return Jwts.builder()
-                .claims().add(claims)
-                .and()
-                .subject(user.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 5))
-                .signWith(generateKey())
-                .compact();
+                    .claims().add(claims)
+                    .and()
+                    .subject(user.getUsername())
+                    .issuedAt(new Date(System.currentTimeMillis()))
+                    .expiration(new Date(System.currentTimeMillis()+60*60*60*5))
+                    .signWith(generateKey())
+                    .compact();
+
     }
 
     public SecretKey generateKey() {

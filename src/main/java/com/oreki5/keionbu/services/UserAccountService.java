@@ -1,6 +1,5 @@
 package com.oreki5.keionbu.services;
 
-import com.oreki5.keionbu.controllers.GlobalExceptionHandler;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +14,11 @@ import com.oreki5.keionbu.dtoInterfaces.TeachersRequest;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
 import com.oreki5.keionbu.dtoModels.auth.OtpVerificationReq;
-import com.oreki5.keionbu.dtoModels.students.StudentsCreateReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsPassReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersCreateReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersCreateRes;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersPassReq;
-import com.oreki5.keionbu.dtoModels.teachers.TeachersUpdateReq;
-import com.oreki5.keionbu.repositories.StudentsRepo;
-import com.oreki5.keionbu.repositories.TeachersRepo;
 import com.oreki5.keionbu.repositories.UsersRepo;
 import com.oreki5.keionbu.utils.UserRolesEnum;
 

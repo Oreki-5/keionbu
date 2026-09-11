@@ -10,4 +10,8 @@ public class OtpVerificationReq {
     @NotEmpty
     private String otp;
 
+    public String getId(){
+        return this.id;
+    }
+
 }

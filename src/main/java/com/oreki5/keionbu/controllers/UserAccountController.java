@@ -1,8 +1,11 @@
 package com.oreki5.keionbu.controllers;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.oreki5.keionbu.config.JwtService;
+import com.oreki5.keionbu.dbEntities.Users;
 import com.oreki5.keionbu.dtoModels.auth.OtpVerificationReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsPassReq;
@@ -35,12 +40,21 @@ public class UserAccountController {
     @Autowired
     private EmailService mailService;
 
+    @Autowired
+    private JwtService jwtService;
+
     // Don't forget to change the requetObject to the intented one for each
     // endpoint. also @Valid
 
     /*
      * Teacher account related
      */
+
+    @PostMapping("/login")
+    public String login(@RequestBody Users user) throws NoSuchAlgorithmException {
+        // TODO: process POST request
+        return jwtService.generateToken(user);
+    }
 
     @PostMapping("/teachers")
     public ResponseEntity<?> createTeacher(@RequestBody @Valid TeachersCreateReq request) {
@@ -64,6 +78,7 @@ public class UserAccountController {
     }
 
     @PutMapping("/teachers/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isOwner(#id)")
     public ResponseEntity<?> updateTeacher(@PathVariable String id,
             @RequestBody @Valid TeachersUpdateReq request) {
         try {
@@ -76,6 +91,7 @@ public class UserAccountController {
     }
 
     @PutMapping("/teachers/pass/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isOwner(#id)")
     public ResponseEntity<?> updateTeacherPass(@PathVariable String id,
             @RequestBody @Valid TeachersPassReq request) {
         try {
@@ -89,6 +105,7 @@ public class UserAccountController {
     }
 
     @DeleteMapping("/teachers/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isOwner(#id)")
     public ResponseEntity<?> softDeleteTeacher(@PathVariable String id) {
         try {
             userAccountService.softDeleteUser(id);
@@ -99,6 +116,12 @@ public class UserAccountController {
 
         }
     }
+
+    // @GetMapping("/test")
+    // @PreAuthorize("@preAuthService.isOwner(#userId)")
+    // public String getMethodName(@RequestParam("userId") String userId) {
+    //     return "you authorized";
+    // }
 
     /*
      * Student account related
@@ -129,6 +152,7 @@ public class UserAccountController {
     }
 
     @PutMapping("/students/{id}")
+    @PreAuthorize("hasRole('STUDENT') and @preAuthService.isOwner(#id)")
     public ResponseEntity<?> updateStudent(@PathVariable String id,
             @RequestBody @Valid StudentsUpdateReq request) {
         try {
@@ -142,6 +166,7 @@ public class UserAccountController {
     }
 
     @PutMapping("/students/pass/{id}")
+    @PreAuthorize("hasRole('STUDENT') and @preAuthService.isOwner(#id)")
     public ResponseEntity<?> updateStudentPass(@PathVariable String id,
             @RequestBody @Valid StudentsPassReq request) {
         try {
@@ -156,6 +181,7 @@ public class UserAccountController {
     }
 
     @DeleteMapping("/students/{id}")
+    @PreAuthorize("hasRole('STUDENT') and @preAuthService.isOwner(#id)")
     public ResponseEntity<?> softDeleteStudent(@PathVariable String id) {
         try {
             userAccountService.softDeleteUser(id);

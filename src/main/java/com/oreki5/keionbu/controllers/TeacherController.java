@@ -43,6 +43,7 @@ public class TeacherController {
      */
 
     @GetMapping("/teachers/{id}/students")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isOwner(#id)")
     public ResponseEntity<List<StudentsResponse>> getStudentsOfTeacher(@PathVariable String id) {
         return new ResponseEntity<>(teachersService.getStudentsOfTeacher(id), HttpStatus.OK);
     }
@@ -51,8 +52,9 @@ public class TeacherController {
      * Music lessons related endpoints
      */
 
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
+
     @PostMapping("/lessons/{teacherId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<?> createLesson(@PathVariable String teacherId,
             @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
             @RequestPart(value = "request") @Valid LessonsCreateReq request) {
@@ -66,17 +68,19 @@ public class TeacherController {
 
     }
 
-    // Future update : add auth so that only the lesson author can access that
+    // Future update : add auth so that only the lesson author can access that -> done
     // record
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
+
     @GetMapping("/lessons/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isLessonOwner(#id)")
     public ResponseEntity<LessonsResponse> getLessonData(@PathVariable String id) {
         return new ResponseEntity<>(teachersService.getLessonData(id), HttpStatus.OK);
 
     }
 
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
+
     @PutMapping("/lessons/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isLessonOwner(#id)")
     public ResponseEntity<?> updateLesson(@PathVariable String id,
             @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
             @RequestPart(value = "request") @Valid LessonsCreateReq request) {
@@ -90,8 +94,9 @@ public class TeacherController {
 
     }
 
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
+
     @DeleteMapping("/lessons/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isLessonOwner(#id)")
     public void softDeleteLesson(@PathVariable String id) {
         teachersService.softDeleteLesson(id);
 
@@ -101,8 +106,9 @@ public class TeacherController {
      * Assignment related endpoints
      */
 
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
+
     @PostMapping("/assignments")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<?> createAssignment(@RequestBody @Valid AssignmentsCreateReq request) {
         try {
             return new ResponseEntity<>(teachersService.createAssignment(request), HttpStatus.OK);
@@ -115,16 +121,16 @@ public class TeacherController {
     }
 
     // filters will come later
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @GetMapping("/assignments")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<List<AssignmentsResponse>> getAssignmentsWithFilters(
             @RequestParam(required = false) String studentId) {
         return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(studentId, ""), HttpStatus.OK);
 
     }
 
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @PutMapping("/assignments/edit/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isAssignmentOwner(#id)")
     public ResponseEntity<?> editAssignment(@PathVariable String id,
             @RequestBody AssignmentsCreateReq request) {
         try {
@@ -135,8 +141,8 @@ public class TeacherController {
 
     }
 
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @PutMapping("/assignments/approve/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isAssignmentOwner(#id)")
     public ResponseEntity<?> approveAssignment(@PathVariable String id,
             @RequestBody AssignmentsApprovalReq request) {
         try {
@@ -146,8 +152,8 @@ public class TeacherController {
         }
     }
 
-    @PreAuthorize("hasRole(ROLE_TEACHER)")
     @DeleteMapping("/assignments/{id}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isOwner(#id)")
     public void deleteAssignment(@PathVariable String id) {
         try {
             teachersService.deleteAssignment(id);
