@@ -28,7 +28,6 @@ public class PreAuthService {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Users user = usersRepo.findByUsername(username);
-        
 
         return user.getId().equals(id);
     }
@@ -38,29 +37,36 @@ public class PreAuthService {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Assignments assignment = assignmentsRepo.findById(id).orElseGet(null);
-        
 
         return assignment.getTeacher().getUsername().equals(username);
     }
-
 
     public boolean isAssignmentSubmitter(String id) {
 
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Assignments assignment = assignmentsRepo.findById(id).orElseGet(null);
-        
 
         return assignment.getStudent().getUsername().equals(username);
     }
+
     public boolean isLessonOwner(String id) {
 
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Lessons lesson = lessonsRepo.findById(id).orElseGet(null);
-        
 
         return lesson.getTeacher().getUsername().equals(username);
+    }
+
+    public boolean isAssignmentLessonAccessible(String id) {
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Assignments assignment = assignmentsRepo.findById(id).orElseGet(null);
+
+        return assignment.getStudent().getUsername().equals(username)
+                || assignment.getTeacher().getUsername().equals(username);
+
     }
 
 }

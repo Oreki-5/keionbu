@@ -36,7 +36,7 @@ public class StudentsController {
      * Teacher joining related
      */
 
-    @PreAuthorize("hasRole('STUDENT')")
+    // @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/teachers")
     public ResponseEntity<List<TeachersResponse>> getAllTeachers() {
         return new ResponseEntity<>(studentsService.getAllTeachers(), HttpStatus.OK);
@@ -55,7 +55,7 @@ public class StudentsController {
     }
 
     @PreAuthorize("hasRole('STUDENT') and @preAuthService.isOwner(#request.id)")
-    @PostMapping("/teacher/join")
+    @PostMapping("/teachers/join")
     public ResponseEntity<?> joinTeacher(@RequestBody @Valid StudentsJoinReq request) {
         try {
             return new ResponseEntity<>(studentsService.joinTeacher(request), HttpStatus.CREATED);
@@ -66,7 +66,7 @@ public class StudentsController {
     }
 
     @PreAuthorize("hasRole('STUDENT') and @preAuthService.isOwner(#request.id)")
-    @PostMapping("/teacher/leave")
+    @PostMapping("/teachers/leave")
     public ResponseEntity<?> leaveTeacher(@RequestBody @Valid StudentsJoinReq request) {
         try {
             return new ResponseEntity<>(studentsService.leaveTeacher(request), HttpStatus.CREATED);
@@ -89,7 +89,7 @@ public class StudentsController {
 
     // Essentially updating assignment
     @PreAuthorize("hasRole('STUDENT') and @preAuthService.isAssignmentSubmitter(#assignmentId)")
-    @PutMapping("/assignment/submit/{assignmentId}")
+    @PutMapping("/assignments/submit/{assignmentId}")
     public ResponseEntity<?> submitAssignment(@PathVariable String assignmentId,
             @RequestParam MultipartFile submissionFile) {
         try {

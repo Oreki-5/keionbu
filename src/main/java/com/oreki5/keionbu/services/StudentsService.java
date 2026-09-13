@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.oreki5.keionbu.dbEntities.Assignments;
 import com.oreki5.keionbu.dbEntities.FileMetaData;
-import com.oreki5.keionbu.dbEntities.FileMetaData;
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dbEntities.Users;
@@ -19,13 +18,10 @@ import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.TeachersResponse;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateRes;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsSubmitRes;
-import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinRes;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersViewRes;
 import com.oreki5.keionbu.repositories.AssignmentsRepo;
-import com.oreki5.keionbu.repositories.StudentsRepo;
-import com.oreki5.keionbu.repositories.TeachersRepo;
 import com.oreki5.keionbu.repositories.UsersRepo;
 import com.oreki5.keionbu.utils.StorageDirEnum;
 
@@ -44,10 +40,10 @@ public class StudentsService {
      */
 
     public List<TeachersResponse> getAllTeachers() {
-        List<Teachers> list = usersRepo.findAllTeachers();
+        List<Users> list = usersRepo.findAllTeachers();
         List<TeachersResponse> response = new ArrayList<>();
         list.forEach(teacher -> {
-            response.add(new TeachersViewRes(teacher));
+            response.add(new TeachersViewRes((Teachers)teacher));
         });
         return response;
     }

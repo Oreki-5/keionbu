@@ -5,10 +5,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
-import com.oreki5.keionbu.dbEntities.Users;
-import com.oreki5.keionbu.repositories.StudentsRepo;
-import com.oreki5.keionbu.repositories.TeachersRepo;
 import com.oreki5.keionbu.repositories.UsersRepo;
 
 @Service

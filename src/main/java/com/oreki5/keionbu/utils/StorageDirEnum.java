@@ -1,10 +1,8 @@
 package com.oreki5.keionbu.utils;
 
-import java.io.File;
-
 public enum StorageDirEnum {
-    LESSON(File.separator + "lessons"),
-    SUBMISSION(File.separator + "submissions");
+    LESSON("lessons"),
+    SUBMISSION("submissions");
 
     private final String path;
 

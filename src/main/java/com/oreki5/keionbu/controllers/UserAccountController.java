@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.oreki5.keionbu.config.JwtService;
 import com.oreki5.keionbu.dbEntities.Users;
+import com.oreki5.keionbu.dtoModels.auth.LoginReq;
 import com.oreki5.keionbu.dtoModels.auth.OtpVerificationReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsPassReq;
@@ -51,9 +52,13 @@ public class UserAccountController {
      */
 
     @PostMapping("/login")
-    public String login(@RequestBody Users user) throws NoSuchAlgorithmException {
-        // TODO: process POST request
-        return jwtService.generateToken(user);
+    public String login(@RequestBody LoginReq request) throws NoSuchAlgorithmException {
+        try {
+            return userAccountService.loginUser(request);
+
+        } catch (Exception e) {
+            return "Invalid credentials";
+        }
     }
 
     @PostMapping("/teachers")
@@ -120,7 +125,7 @@ public class UserAccountController {
     // @GetMapping("/test")
     // @PreAuthorize("@preAuthService.isOwner(#userId)")
     // public String getMethodName(@RequestParam("userId") String userId) {
-    //     return "you authorized";
+    // return "you authorized";
     // }
 
     /*

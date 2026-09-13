@@ -26,8 +26,6 @@ import com.oreki5.keionbu.dtoModels.lessons.LessonsCreateRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
 import com.oreki5.keionbu.repositories.AssignmentsRepo;
 import com.oreki5.keionbu.repositories.LessonsRepo;
-import com.oreki5.keionbu.repositories.StudentsRepo;
-import com.oreki5.keionbu.repositories.TeachersRepo;
 import com.oreki5.keionbu.repositories.UsersRepo;
 import com.oreki5.keionbu.utils.StorageDirEnum;
 

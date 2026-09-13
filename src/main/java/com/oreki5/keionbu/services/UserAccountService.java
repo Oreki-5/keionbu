@@ -1,5 +1,6 @@
 package com.oreki5.keionbu.services;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.oreki5.keionbu.config.JwtService;
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dbEntities.Users;
 import com.oreki5.keionbu.dtoInterfaces.TeachersRequest;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
+import com.oreki5.keionbu.dtoModels.auth.LoginReq;
 import com.oreki5.keionbu.dtoModels.auth.OtpVerificationReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsPassReq;
@@ -31,6 +34,11 @@ public class UserAccountService {
     @Autowired
     private EmailService mailService;
 
+    @Autowired
+    private JwtService jwtService;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
     @Transactional
     public UserAccountResponse createUser(UserAccountRequest request) throws Exception {
         Users user;
@@ -42,7 +50,7 @@ public class UserAccountService {
         }
         user.setPassword(passEncoder(user.getPassword()));
         user.setOtp(sendOtp(user));
-        
+
         if (usersRepo.existsByUsername(user.getUsername())) {
             throw new Exception("Duplicate Record");
         }
@@ -170,10 +178,10 @@ public class UserAccountService {
     }
 
     public String passEncoder(String input) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
         return encoder.encode(input);
 
     }
+
 
     public String sendOtp(Users user) {
         Random r = new Random();
@@ -188,6 +196,16 @@ public class UserAccountService {
 
         }
         return otp;
+    }
+
+    public String loginUser(LoginReq request) throws Exception {
+        Users user = usersRepo.findByUsername(request.getUsername());
+
+        if (encoder.matches(request.getPassword(),user.getPassword())) {
+            return jwtService.generateToken(user);
+        } else {
+            return "Invalid credentials";
+        }
     }
 
 }
