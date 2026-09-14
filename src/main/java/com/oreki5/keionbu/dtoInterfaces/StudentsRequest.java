@@ -6,6 +6,5 @@ import com.oreki5.keionbu.dbEntities.Users;
 import jakarta.activation.UnsupportedDataTypeException;
 
 public interface StudentsRequest {
-    Users mapToStudents(Students student) throws Exception;
     
 }

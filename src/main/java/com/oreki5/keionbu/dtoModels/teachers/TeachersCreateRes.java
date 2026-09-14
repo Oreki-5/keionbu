@@ -3,6 +3,7 @@ package com.oreki5.keionbu.dtoModels.teachers;
 import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class TeachersCreateRes implements UserAccountResponse {
     @NotEmpty
     private String subject;
     @NotEmpty
+    @Email 
     private String email;
     @NotEmpty
     private String username;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
-import com.oreki5.keionbu.utils.Role;
+import com.oreki5.keionbu.utils.UserRolesEnum;
 
 import jakarta.activation.UnsupportedDataTypeException;
 import jakarta.validation.constraints.Email;
@@ -39,7 +39,7 @@ public class TeachersCreateReq implements UserAccountRequest {
         teacher.setSubject(subject);
         teacher.setStudents(new ArrayList<>());
         teacher.setEmail(email);
-        teacher.setRole(Role.TEACHER.getRole());
+        teacher.setRole(UserRolesEnum.TEACHER.getRole());
         return teacher;
     }
 
