@@ -54,7 +54,7 @@ public class TeacherController {
 
 
     @PostMapping("/lessons/{teacherId}")
-    // @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("@preAuthService.isOwner(#teacherId)")
     public ResponseEntity<?> createLesson(@PathVariable String teacherId,
             @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
             @RequestPart(value = "request") @Valid LessonsCreateReq request) {

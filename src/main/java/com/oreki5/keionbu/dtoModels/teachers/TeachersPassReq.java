@@ -9,7 +9,6 @@ import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 
 import jakarta.activation.UnsupportedDataTypeException;
 import jakarta.validation.constraints.NotEmpty;
-
 import lombok.Data;
 
 @Data
@@ -22,7 +21,7 @@ public class TeachersPassReq implements UserAccountRequest, TeachersRequest {
 
     @Override
     public Teachers mapToTeachers(Teachers teacher) throws Exception {
-        if(password != retypedPassword){
+        if(!password.equals(retypedPassword)){
             throw new Exception("Passwords don't match");
         }
         teacher.setPassword(password);

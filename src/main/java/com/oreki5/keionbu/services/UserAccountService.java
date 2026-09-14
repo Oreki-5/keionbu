@@ -1,7 +1,7 @@
 package com.oreki5.keionbu.services;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -49,11 +49,19 @@ public class UserAccountService {
             user = request.mapToStudents(new Students());
         }
         user.setPassword(passEncoder(user.getPassword()));
-        user.setOtp(sendOtp(user));
 
         if (usersRepo.existsByUsername(user.getUsername())) {
             throw new Exception("Duplicate Record");
         }
+
+        Random r = new Random();
+        String otp = String.format("%06d", r.nextInt(100000));
+
+        user.setOtp(otp);
+
+        CompletableFuture.runAsync(() -> {
+            sendOtp(user);
+        });
 
         return request instanceof TeachersCreateReq
                 ? new TeachersCreateRes(usersRepo.save((Teachers) user))
@@ -182,30 +190,28 @@ public class UserAccountService {
 
     }
 
-
-    public String sendOtp(Users user) {
-        Random r = new Random();
-        String otp = String.format("%06d", r.nextInt(100000));
+    public void sendOtp(Users user) {
 
         String subject = "Account Verification for Keionbu user: " + user.getUsername();
-        String body = "Your OTP for verification is: " + otp;
+        String body = "Your OTP for verification is: " + user.getOtp();
         try {
             mailService.sendEmail(user.getEmail(), subject, body);
 
         } catch (Exception e) {
 
         }
-        return otp;
+
     }
 
     public String loginUser(LoginReq request) throws Exception {
         Users user = usersRepo.findByUsername(request.getUsername());
 
-        if (encoder.matches(request.getPassword(),user.getPassword())) {
+        if (encoder.matches(request.getPassword(), user.getPassword())) {
             return jwtService.generateToken(user);
         } else {
             return "Invalid credentials";
         }
     }
+
 
 }

@@ -24,14 +24,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
+        
         http.csrf(e -> e.disable()).authorizeHttpRequests(request -> {
             request.requestMatchers("/", "/api/v1/users/**").permitAll();
             request.requestMatchers("/api/v1/lessons/**", 
                                     "/api/v1/teachers/**", 
                                     "/api/v1/assignments",
                                     "/api/v1/assignments/**").hasAnyRole("STUDENT", "TEACHER");
-            // request.requestMatchers("/", "/api/v1/lessons/**").hasRole("TEACHER");
         })
                 .formLogin(form -> form.disable())
                 .httpBasic(Customizer.withDefaults())

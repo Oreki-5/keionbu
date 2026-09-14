@@ -88,7 +88,7 @@ public class TeachersService {
     public LessonsResponse updateLessonData(LessonsRequest request, String id, MultipartFile lessonFile)
             throws UnsupportedDataTypeException, Exception {
         Lessons lesson = request.mapToLessons(lessonsRepo.findById(id).orElseThrow());
-        if (lessonFile != null) {
+        if (!lessonFile.getOriginalFilename().equals("")) {
             FileMetaData metadata = fileManagementService.uploadFile(lessonFile, StorageDirEnum.LESSON,
                     lesson.getTeacher().getId());
             lesson.setLessonFile(metadata);

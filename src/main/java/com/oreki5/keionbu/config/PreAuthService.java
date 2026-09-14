@@ -1,5 +1,7 @@
 package com.oreki5.keionbu.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -54,8 +56,8 @@ public class PreAuthService {
 
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Lessons lesson = lessonsRepo.findById(id).orElseGet(null);
-
+        Lessons lesson = lessonsRepo.findById(id).orElseThrow();
+        List<Lessons> le = lessonsRepo.findAll();
         return lesson.getTeacher().getUsername().equals(username);
     }
 
