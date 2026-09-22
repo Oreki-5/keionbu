@@ -1,5 +1,6 @@
 package com.oreki5.keionbu.services;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.TeachersResponse;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateRes;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsSubmitRes;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsViewRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsJoinRes;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersViewRes;
@@ -43,7 +45,7 @@ public class StudentsService {
         List<Users> list = usersRepo.findAllTeachers();
         List<TeachersResponse> response = new ArrayList<>();
         list.forEach(teacher -> {
-            response.add(new TeachersViewRes((Teachers)teacher));
+            response.add(new TeachersViewRes((Teachers) teacher));
         });
         return response;
     }
@@ -76,6 +78,9 @@ public class StudentsService {
         enrolledStudents.add(student);
         teacher.setStudents(enrolledStudents);
 
+        teacher.setUpdatedAt(Instant.now());
+        student.setUpdatedAt(Instant.now());
+
         usersRepo.save(teacher);
 
         // verify the correct response
@@ -96,6 +101,9 @@ public class StudentsService {
         enrolledStudents.remove(student);
         teacher.setStudents(enrolledStudents);
 
+        teacher.setUpdatedAt(Instant.now());
+        student.setUpdatedAt(Instant.now());
+
         usersRepo.save(teacher);
 
         // verify the correct response
@@ -112,16 +120,16 @@ public class StudentsService {
         if (teacherId == null) {
             // Students student = (Students) usersRepo.findById(studentId).orElseThrow();
             list = assignmentsRepo.findAllByStudent(usersRepo.findById(studentId).orElseThrow());
-            list.forEach(item -> {
-                response.add(new AssignmentsCreateRes(item));
+            list.forEach(assignment -> {
+                response.add(new AssignmentsViewRes(assignment));
             });
 
         } else {
             list = assignmentsRepo
                     .findAllByStudentAndTeacher(usersRepo.findById(studentId).orElseThrow(),
                             usersRepo.findById(teacherId).orElseThrow());
-            list.forEach(item -> {
-                response.add(new AssignmentsCreateRes(item));
+            list.forEach(assignment -> {
+                response.add(new AssignmentsViewRes(assignment));
             });
         }
 
@@ -142,6 +150,7 @@ public class StudentsService {
         assignment.setSubmission(metadata);
         assignment.setApprovalStatus("submitted");
 
+        assignment.setUpdatedAt(Instant.now());
         // Need to chanage response model here
         return new AssignmentsSubmitRes(assignmentsRepo.save(assignment));
     }

@@ -4,7 +4,6 @@ import java.time.Instant;
 
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dbEntities.Teachers;
-import com.oreki5.keionbu.dtoInterfaces.StudentsRequest;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountRequest;
 
 import jakarta.activation.UnsupportedDataTypeException;

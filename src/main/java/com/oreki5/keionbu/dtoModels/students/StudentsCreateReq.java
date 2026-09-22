@@ -36,6 +36,8 @@ public class StudentsCreateReq implements UserAccountRequest {
         student.setUpdatedAt(Instant.now());
         student.setEmail(email);
         student.setRole(UserRolesEnum.STUDENT.getRole());
+        student.setCreatedAt(Instant.now());
+        student.setUpdatedAt(Instant.now());
         return student;
     }
 

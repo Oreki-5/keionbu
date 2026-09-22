@@ -1,5 +1,6 @@
 package com.oreki5.keionbu.dtoModels.lessons;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import lombok.Data;
 @Data
 public class LessonsCreateRes implements LessonsResponse {
     private String id;
+    private String teacherId;
+    private String teacherName;
     private long lessonNo;
     private String lessonName;
     private String lessonDesc;
@@ -18,9 +21,13 @@ public class LessonsCreateRes implements LessonsResponse {
     private String lessonFile;
     private String lessonDifficulty;
     private long requiredScore;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public LessonsCreateRes(Lessons lesson) {
         id = lesson.getId();
+        teacherId = lesson.getTeacher().getId();
+        teacherName = lesson.getTeacher().getUsername();
         lessonNo = lesson.getLessonNo();
         lessonName = lesson.getLessonName();
         lessonDesc = lesson.getLessonDesc();
@@ -28,5 +35,7 @@ public class LessonsCreateRes implements LessonsResponse {
         lessonDifficulty = lesson.getLessonDifficulty();
         requiredScore = lesson.getRequiredScore();
         lessonFile = lesson.getLessonFile().originalName();
+        createdAt = lesson.getCreatedAt();
+        updatedAt = lesson.getUpdatedAt();
     }
 }

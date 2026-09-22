@@ -1,10 +1,10 @@
 package com.oreki5.keionbu.dtoModels.lessons;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.oreki5.keionbu.dbEntities.Lessons;
-import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.LessonsRequest;
 
 import jakarta.activation.UnsupportedDataTypeException;
@@ -36,7 +36,7 @@ public class LessonsCreateReq implements LessonsRequest {
         lesson.setObjectives(objectives);
         lesson.setLessonDifficulty(lessonDifficulty);
         lesson.setRequiredScore(requiredScore);
-
+        lesson.setUpdatedAt(Instant.now());
         return lesson;
     }
 }

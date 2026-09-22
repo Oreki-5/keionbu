@@ -1,5 +1,6 @@
 package com.oreki5.keionbu.services;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +78,8 @@ public class TeachersService {
             lesson.setLessonFile(metadata);
 
         }
+        lesson.setCreatedAt(Instant.now());
+
         lessonsRepo.save(lesson);
         return new LessonsCreateRes(lesson);
     }
@@ -94,7 +97,8 @@ public class TeachersService {
             lesson.setLessonFile(metadata);
 
         }
-        // Later add verification for authorized teacher heres
+        // Later add verification for authorized teacher heres-> done
+        lesson.setUpdatedAt(Instant.now());
         return new LessonsCreateRes(lessonsRepo.save(lesson));
     }
 
@@ -125,6 +129,7 @@ public class TeachersService {
         assignment.setStudent(student);
         assignment.setTeacher(teacher);
         assignment.setLesson(lesson);
+        assignment.setCreatedAt(Instant.now());
         return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
     }
 
@@ -151,6 +156,7 @@ public class TeachersService {
             assignment.setStudent(usersRepo.findById(typedRequest.getStudentId()).orElseThrow());
             assignment.setTeacher(usersRepo.findById(typedRequest.getTeacherId()).orElseThrow());
             assignment.setLesson(lessonsRepo.findById(typedRequest.getLessonId()).orElseThrow());
+            assignment.setUpdatedAt(Instant.now());
             return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
 
         }

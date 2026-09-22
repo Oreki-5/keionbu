@@ -1,5 +1,7 @@
 package com.oreki5.keionbu.dtoModels.assignments;
 
+import java.time.Instant;
+
 import com.oreki5.keionbu.dbEntities.Assignments;
 import com.oreki5.keionbu.dbEntities.FileMetaData;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsResponse;
@@ -15,6 +17,8 @@ public class AssignmentsSubmitRes implements AssignmentsResponse {
     private String comment;
     private String approvalStatus;
     private FileMetaData submission;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public AssignmentsSubmitRes(Assignments assignment) {
         id = assignment.getId();
@@ -24,6 +28,8 @@ public class AssignmentsSubmitRes implements AssignmentsResponse {
         approvalStatus = assignment.getApprovalStatus();
         submission = assignment.getSubmission();
         comment = assignment.getComment();
+        createdAt = assignment.getCreatedAt();
+        updatedAt = assignment.getUpdatedAt();
 
     }
 }

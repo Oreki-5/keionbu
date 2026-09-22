@@ -9,14 +9,16 @@ import lombok.Data;
 public class TeachersViewRes implements TeachersResponse {
     private String id;
     private String username;
-    private String teacherName;
+    private String firstName;
+    private String lastName;
     private String subject;
     
 
     public TeachersViewRes(Teachers teacher) {
         id = teacher.getId();
         username = teacher.getUsername();
-        teacherName = teacher.getFirstName() + " " + teacher.getLastName();
+        firstName = teacher.getFirstName();
+        lastName = teacher.getLastName();
         subject = teacher.getSubject();
     }
 

@@ -26,11 +26,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         
         http.csrf(e -> e.disable()).authorizeHttpRequests(request -> {
-            request.requestMatchers("/", "/api/v1/users/**").permitAll();
+            request.requestMatchers("/", "/api/v1/users/**","/swagger-ui/**", "/v3/api-docs/**").permitAll();
             request.requestMatchers("/api/v1/lessons/**", 
                                     "/api/v1/teachers/**", 
                                     "/api/v1/assignments",
                                     "/api/v1/assignments/**").hasAnyRole("STUDENT", "TEACHER");
+            request.anyRequest().authenticated();
         })
                 .formLogin(form -> form.disable())
                 .httpBasic(Customizer.withDefaults())

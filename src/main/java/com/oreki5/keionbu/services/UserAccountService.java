@@ -1,5 +1,6 @@
 package com.oreki5.keionbu.services;
 
+import java.time.Instant;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
@@ -58,6 +59,7 @@ public class UserAccountService {
         String otp = String.format("%06d", r.nextInt(100000));
 
         user.setOtp(otp);
+        user.setCreatedAt(Instant.now());
 
         CompletableFuture.runAsync(() -> {
             sendOtp(user);
@@ -153,6 +155,9 @@ public class UserAccountService {
             user.setPassword(passEncoder(user.getPassword()));
         }
 
+        user.setUpdatedAt(Instant.now());
+
+        
         return user.getRole().equals(UserRolesEnum.TEACHER.getRole())
                 ? new TeachersCreateRes(usersRepo.save((Teachers) user))
                 : new StudentsCreateRes(usersRepo.save((Students) user));

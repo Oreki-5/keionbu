@@ -1,5 +1,7 @@
 package com.oreki5.keionbu.dtoModels.teachers;
 
+import java.time.Instant;
+
 import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
 
@@ -17,13 +19,17 @@ public class TeachersCreateRes implements UserAccountResponse {
     private String lastName;
     @NotEmpty
     private String subject;
-    @NotEmpty
-    @Email 
+
+    private String role;
+
     private String email;
-    @NotEmpty
     private String username;
-    @NotEmpty
-    private boolean verified;
+
+    private Instant createdAt;
+
+    private Instant updatedAt;
+
+    private String token;
 
     public TeachersCreateRes(Teachers teacher) {
         id = teacher.getId();
@@ -32,7 +38,9 @@ public class TeachersCreateRes implements UserAccountResponse {
         lastName = teacher.getLastName();
         subject = teacher.getSubject();
         email = teacher.getEmail();
-        verified = teacher.isVerified();
+        createdAt = teacher.getCreatedAt();
+        updatedAt = teacher.getUpdatedAt();
+        role = teacher.getRole();
     }
 
 }

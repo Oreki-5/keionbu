@@ -1,5 +1,7 @@
 package com.oreki5.keionbu.dtoModels.assignments;
 
+import java.time.Instant;
+
 import com.oreki5.keionbu.dbEntities.Assignments;
 import com.oreki5.keionbu.dtoInterfaces.AssignmentsRequest;
 
@@ -19,6 +21,7 @@ public class AssignmentsApprovalReq implements AssignmentsRequest {
         assignment.setApprovalStatus(approvalStatus);
         assignment.setScore(score);
         assignment.setComment(comment);
+        assignment.setUpdatedAt(Instant.now());
 
         return assignment;
     }

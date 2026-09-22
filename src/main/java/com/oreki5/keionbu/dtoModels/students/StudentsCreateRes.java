@@ -1,10 +1,11 @@
 package com.oreki5.keionbu.dtoModels.students;
 
+import java.time.Instant;
+
 import com.oreki5.keionbu.dbEntities.Students;
 import com.oreki5.keionbu.dtoInterfaces.StudentsResponse;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -13,20 +14,25 @@ public class StudentsCreateRes implements UserAccountResponse, StudentsResponse 
     @NotEmpty
     private String id;
     @NotEmpty
-    private String studentName;
+    private String firstName;
     @NotEmpty
-    @Email 
+    private String lastName;
+
+    private String role;
+
     private String email;
-    @NotEmpty
     private String username;
-    @NotEmpty
-    private boolean verified;
+    private Instant createdAt;
+
+    private Instant updatedAt;
 
     public StudentsCreateRes(Students student) {
         id = student.getId();
         username = student.getUsername();
-        studentName = student.getFirstName() + " " + student.getLastName();
+        firstName = student.getFirstName();
+        lastName = student.getLastName();
         email = student.getEmail();
-        verified = student.isVerified();
+        createdAt = student.getCreatedAt();
+        updatedAt = student.getUpdatedAt();
     }
 }
