@@ -26,11 +26,14 @@ public class StudentsCreateRes implements UserAccountResponse, StudentsResponse 
 
     private Instant updatedAt;
 
+    private String token;
+
     public StudentsCreateRes(Students student) {
         id = student.getId();
         username = student.getUsername();
         firstName = student.getFirstName();
         lastName = student.getLastName();
+        role = student.getRole();
         email = student.getEmail();
         createdAt = student.getCreatedAt();
         updatedAt = student.getUpdatedAt();

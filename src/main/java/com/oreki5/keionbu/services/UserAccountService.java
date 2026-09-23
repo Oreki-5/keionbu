@@ -23,6 +23,7 @@ import com.oreki5.keionbu.dtoModels.students.StudentsPassReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersCreateReq;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersCreateRes;
 import com.oreki5.keionbu.dtoModels.teachers.TeachersPassReq;
+import com.oreki5.keionbu.dtoModels.users.UserLoginRes;
 import com.oreki5.keionbu.repositories.UsersRepo;
 import com.oreki5.keionbu.utils.UserRolesEnum;
 
@@ -208,13 +209,15 @@ public class UserAccountService {
 
     }
 
-    public String loginUser(LoginReq request) throws Exception {
+    public UserLoginRes loginUser(LoginReq request) throws Exception {
         Users user = usersRepo.findByUsername(request.getUsername());
-
+        System.out.println("Method called");
         if (encoder.matches(request.getPassword(), user.getPassword())) {
-            return jwtService.generateToken(user);
+            UserLoginRes response = new UserLoginRes(user);
+            response.setToken(jwtService.generateToken(user));
+            return response;
         } else {
-            return "Invalid credentials";
+            throw new Exception("Invalid creds");
         }
     }
 

@@ -5,6 +5,9 @@ import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dbEntities.Users;
 import com.oreki5.keionbu.dtoInterfaces.UserAccountResponse;
 
+import lombok.Data;
+
+@Data
 public class UserShortViewRes implements UserAccountResponse {
 
     private String id;

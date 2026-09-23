@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oreki5.keionbu.config.JwtService;
-import com.oreki5.keionbu.dbEntities.Users;
 import com.oreki5.keionbu.dtoModels.auth.LoginReq;
 import com.oreki5.keionbu.dtoModels.auth.OtpVerificationReq;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateReq;
@@ -33,6 +33,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@CrossOrigin
 public class UserAccountController {
 
     @Autowired
@@ -52,12 +53,12 @@ public class UserAccountController {
      */
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginReq request) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> login(@RequestBody LoginReq request) throws NoSuchAlgorithmException {
         try {
-            return userAccountService.loginUser(request);
+            return new ResponseEntity<>(userAccountService.loginUser(request),HttpStatus.OK);
 
         } catch (Exception e) {
-            return "Invalid credentials";
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
