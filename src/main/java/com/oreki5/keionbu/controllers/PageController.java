@@ -19,4 +19,10 @@ public class PageController {
         response.sendRedirect("/swagger-ui.html");
     }
 
+    @GetMapping("health")
+    public boolean healthCheck() {
+        System.out.println("health check");
+        return true;
+    }
+
 }
