@@ -83,7 +83,7 @@ public class StudentsController {
      */
 
     @PreAuthorize("hasRole('STUDENT') and @preAuthService.isOwner(#studentId)")
-    @GetMapping("/assignments/{studentId}")
+    @GetMapping("/assignments/students/{studentId}")
     public ResponseEntity<?> getAssignmentsOfStudent(@PathVariable String studentId,
             @RequestParam(required = false) String teacherId) {
         return new ResponseEntity<>(studentsService.getAssignmentsOfStudent(studentId, teacherId), HttpStatus.CREATED);

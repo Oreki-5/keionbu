@@ -54,11 +54,10 @@ public class TeacherController {
      * Music lessons related endpoints
      */
 
-
     @PostMapping("/lessons/{teacherId}")
     @PreAuthorize("@preAuthService.isOwner(#teacherId)")
     public ResponseEntity<?> createLesson(@PathVariable String teacherId,
-            @RequestPart(value = "lessonfile", required = false) MultipartFile lessonFile,
+            @RequestPart(value = "lessonfile") MultipartFile lessonFile,
             @RequestPart(value = "request") @Valid LessonsCreateReq request) {
         try {
             return new ResponseEntity<>(teachersService.createLesson(request, teacherId, lessonFile), HttpStatus.OK);
@@ -70,8 +69,16 @@ public class TeacherController {
 
     }
 
-    // Future update : add auth so that only the lesson author can access that -> done
+    // Future update : add auth so that only the lesson author can access that ->
+    // done
     // record
+
+    @GetMapping("/lessons/teachers/{teacherId}")
+    @PreAuthorize("hasRole('TEACHER') and @preAuthService.isOwner(#teacherId)")
+    public ResponseEntity<List<?>> getLessonsOfTeacher(@PathVariable String teacherId) {
+        return new ResponseEntity<>(teachersService.getAllLessonsOfTeacher(teacherId), HttpStatus.OK);
+
+    }
 
     @GetMapping("/lessons/{id}")
     @PreAuthorize("hasRole('TEACHER') and @preAuthService.isLessonOwner(#id)")
@@ -79,7 +86,6 @@ public class TeacherController {
         return new ResponseEntity<>(teachersService.getLessonData(id), HttpStatus.OK);
 
     }
-
 
     @PutMapping("/lessons/{id}")
     @PreAuthorize("hasRole('TEACHER') and @preAuthService.isLessonOwner(#id)")
@@ -96,7 +102,6 @@ public class TeacherController {
 
     }
 
-
     @DeleteMapping("/lessons/{id}")
     @PreAuthorize("hasRole('TEACHER') and @preAuthService.isLessonOwner(#id)")
     public void softDeleteLesson(@PathVariable String id) {
@@ -107,7 +112,6 @@ public class TeacherController {
     /*
      * Assignment related endpoints
      */
-
 
     @PostMapping("/assignments")
     @PreAuthorize("hasRole('TEACHER')")
@@ -123,11 +127,10 @@ public class TeacherController {
     }
 
     // filters will come later
-    @GetMapping("/assignments")
+    @GetMapping("/assignments/teachers/{teacherId}")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<List<AssignmentsResponse>> getAssignmentsWithFilters(
-            @RequestParam(required = false) String studentId) {
-        return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(studentId, ""), HttpStatus.OK);
+    public ResponseEntity<List<AssignmentsResponse>> getAssignmentsWithFilters(@PathVariable String teacherId, @RequestParam(required = false) String studentId) {
+        return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(teacherId, studentId, ""), HttpStatus.OK);
 
     }
 

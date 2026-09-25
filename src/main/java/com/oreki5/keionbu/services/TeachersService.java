@@ -23,8 +23,11 @@ import com.oreki5.keionbu.dtoModels.assignments.AssignmentsApprovalReq;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsApprovalRes;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateReq;
 import com.oreki5.keionbu.dtoModels.assignments.AssignmentsCreateRes;
+import com.oreki5.keionbu.dtoModels.assignments.AssignmentsViewRes;
 import com.oreki5.keionbu.dtoModels.lessons.LessonsCreateRes;
+import com.oreki5.keionbu.dtoModels.lessons.LessonsViewRes;
 import com.oreki5.keionbu.dtoModels.students.StudentsCreateRes;
+import com.oreki5.keionbu.dtoModels.students.StudentsViewRes;
 import com.oreki5.keionbu.repositories.AssignmentsRepo;
 import com.oreki5.keionbu.repositories.LessonsRepo;
 import com.oreki5.keionbu.repositories.UsersRepo;
@@ -53,7 +56,7 @@ public class TeachersService {
         List<StudentsResponse> listOfStudents = new ArrayList<>();
         Teachers teacher = (Teachers) usersRepo.findById(id).orElseThrow();
         teacher.getStudents().forEach(student -> {
-            listOfStudents.add((StudentsResponse) new StudentsCreateRes(student));
+            listOfStudents.add((StudentsResponse) new StudentsViewRes(student));
         });
 
         return listOfStudents;
@@ -82,6 +85,16 @@ public class TeachersService {
 
         lessonsRepo.save(lesson);
         return new LessonsCreateRes(lesson);
+    }
+
+    public List<LessonsResponse> getAllLessonsOfTeacher(String teacherId) {
+        List<LessonsResponse> response = new ArrayList<>();
+        List<Lessons> list = lessonsRepo.findAllByTeacher(usersRepo.findById(teacherId).orElseThrow());
+
+        list.forEach((lesson) -> {
+            response.add(new LessonsViewRes(lesson));
+        });
+        return response;
     }
 
     public LessonsResponse getLessonData(String id) {
@@ -133,13 +146,20 @@ public class TeachersService {
         return new AssignmentsCreateRes(assignmentsRepo.save(assignment));
     }
 
-    public List<AssignmentsResponse> getAssignmentsWithFilters(String studentId, String status) {
-
+    public List<AssignmentsResponse> getAssignmentsWithFilters(String teacherId, String studentId, String status) {
         List<AssignmentsResponse> response = new ArrayList<>();
-        List<Assignments> list = assignmentsRepo.findAllByStudent(usersRepo.findById(studentId).orElseThrow());
-        list.forEach(item -> {
-            response.add(new AssignmentsCreateRes(item));
-        });
+        if (studentId != null) {
+            List<Assignments> list = assignmentsRepo.findAllByStudentAndTeacher(
+                    usersRepo.findById(studentId).orElseThrow(), usersRepo.findById(teacherId).orElseThrow());
+            list.forEach(item -> {
+                response.add(new AssignmentsViewRes(item));
+            });
+        } else {
+            List<Assignments> list = assignmentsRepo.findAllByTeacher(usersRepo.findById(teacherId).orElseThrow());
+            list.forEach(item -> {
+                response.add(new AssignmentsViewRes(item));
+            });
+        }
 
         return response;
     }

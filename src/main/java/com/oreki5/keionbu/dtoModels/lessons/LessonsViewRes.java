@@ -1,8 +1,11 @@
 package com.oreki5.keionbu.dtoModels.lessons;
 
 import com.oreki5.keionbu.dbEntities.Lessons;
+import com.oreki5.keionbu.dtoInterfaces.LessonsResponse;
 
-public class LessonsViewRes {
+import lombok.Data;
+@Data 
+public class LessonsViewRes implements LessonsResponse {
     private String id;
     private long lessonNo;
     private String lessonName;

@@ -6,8 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.oreki5.keionbu.dbEntities.Assignments;
 import com.oreki5.keionbu.dbEntities.Lessons;
-import com.oreki5.keionbu.dbEntities.Students;
-import com.oreki5.keionbu.dbEntities.Teachers;
 import com.oreki5.keionbu.dbEntities.Users;
 
 public interface AssignmentsRepo extends MongoRepository<Assignments,String>{
@@ -16,6 +14,9 @@ public interface AssignmentsRepo extends MongoRepository<Assignments,String>{
 
 
     List<Assignments> findAllByStudent(Users student);
+
+
+    List<Assignments> findAllByTeacher(Users teacher);
 
 
     List<Assignments> findAllByStudentAndTeacher(Users student, Users teacher);
