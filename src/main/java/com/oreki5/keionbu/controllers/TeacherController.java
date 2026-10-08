@@ -133,6 +133,12 @@ public class TeacherController {
         return new ResponseEntity<>(teachersService.getAssignmentsWithFilters(teacherId, studentId, ""), HttpStatus.OK);
 
     }
+    @GetMapping("/assignments/{id}")
+    @PreAuthorize("hasAnyRole('STUDENT','TEACHER') and @preAuthService.isAssignmentOwner(#id)")
+    public ResponseEntity<AssignmentsResponse> getAssignmentDetails(@PathVariable String id) {
+        return new ResponseEntity<>(teachersService.getAssignmentDetails(id), HttpStatus.OK);
+
+    }
 
     @PutMapping("/assignments/edit/{id}")
     @PreAuthorize("hasRole('TEACHER') and @preAuthService.isAssignmentOwner(#id)")

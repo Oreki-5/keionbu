@@ -164,6 +164,10 @@ public class TeachersService {
         return response;
     }
 
+    public AssignmentsResponse getAssignmentDetails(String id){
+        return new AssignmentsCreateRes(assignmentsRepo.findById(id).orElseThrow());
+    }
+
     public AssignmentsResponse editAssignment(AssignmentsRequest request, String id)
             throws UnsupportedDataTypeException, Exception {
 
